@@ -69,3 +69,8 @@ fi
 if [ -f "$GOOGLESDK/completion.zsh.inc" ]; then
     . "$GOOGLESDK/completion.zsh.inc"
 fi
+
+###
+### Command aliases
+###
+alias ls='ls -F'

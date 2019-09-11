@@ -1,4 +1,6 @@
-README.md
+*.md
 .git
+.gitignore
+exclude
 bootstrap.macos.zsh
 bootstrap.linux.zsh
