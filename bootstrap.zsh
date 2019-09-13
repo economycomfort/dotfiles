@@ -60,7 +60,7 @@ setup () {
     if [ -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
         echo "(---) zsh-syntax-highlighting plugin appears to already be installed; skipping."
     else
-        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-hightlighting
+        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     fi
 }
 
