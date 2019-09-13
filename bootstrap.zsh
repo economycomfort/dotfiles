@@ -35,11 +35,13 @@ link () {
     case $resp in
         Y|y)
             for file in $( ls -A | grep -vE $EXCLUDE ) ; do
-                mv "${HOME}/${file}" $backupdir || echo "BOOTSTRAP: (!!) Unable to backup $HOME/$file."
+                if [ -f ${HOME}/${file} ]; then  
+                    mv "${HOME}/${file}" $backupdir
+                fi
                 ln -sf $PWD/$file $HOME || echo "BOOTSTRAP: (!!) Unable to symlink $HOME/$file."
             done
             echo "BOOTSTRAP: Symlinking complete."
-            echo "BOOTSTRSP: Originals backed up in $backupdir."
+            echo "BOOTSTRAP: Originals backed up in $backupdir."
             ;; 
         *)
             echo "BOOTSTRAP: (!!) Cancelled by user."
