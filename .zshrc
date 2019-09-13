@@ -98,14 +98,23 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ls="ls -GF"
 
-# Updates $PATH for Google Cloud SDK
+# Set our ls options appropriately.
+case `uname` in
+    Linux)
+        alias ls="ls --color -F"
+        ;;
+    Darwin|BSD)
+        alias ls="ls -GF"
+        ;;
+esac
+
+# Updates $PATH for Google Cloud SDK.
 if [ -f $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc ]; then
     . $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc
 fi
 
-# Enables command completion for Google Cloud SDK
+# Enables command completion for Google Cloud SDK.
 if [ -f $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc ]; then
     . $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc
 fi
