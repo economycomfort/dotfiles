@@ -4,8 +4,12 @@
 #
 set -e
 
+# A few variables to define where to grab content.
+URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
+URL_P10K="https://github.com/romkatv/powerlevel10k.git"
+URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+
 # Filename patterns to exclude from symlinking.
-#EXCLUDE="bootstrap.*|\.exclude*|\.swp|\.git$|\.gitignore|.*.md"
 EXCLUDE=(
     "bootstrap.*"
     "\.exclude*"
@@ -42,7 +46,7 @@ setup () {
     if [ -d $HOME/.oh-my-zsh ]; then
         echo "(---) oh-my-zsh appears to already be installed; skipping."
     else
-        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh --unattended)"
+        sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
     fi  
     [ ! -z $ZSH_CUSTOM ] || ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
     
@@ -50,14 +54,14 @@ setup () {
     if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
         echo "(---) powerlevel10k appears to already be installed; skipping."
     else
-        git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+        git clone $URL_P10K $ZSH_CUSTOM/themes/powerlevel10k
     fi
 
     # Install zsh-syntax-highlighting plugin
     if [ -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
         echo "(---) zsh-syntax-highlighting plugin appears to already be installed; skipping."
     else
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-hightlighting
+        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING $ZSH_CUSTOM/plugins/zsh-syntax-hightlighting
     fi
 }
 
