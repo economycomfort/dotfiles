@@ -48,20 +48,19 @@ setup () {
     else
         sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
     fi  
-    [ ! -z $ZSH_CUSTOM ] || ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
     
     # Install powerlevel10k theme
     if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
         echo "(---) powerlevel10k appears to already be installed; skipping."
     else
-        git clone $URL_P10K $ZSH_CUSTOM/themes/powerlevel10k
+        git clone $URL_P10K ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     fi
 
     # Install zsh-syntax-highlighting plugin
     if [ -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
         echo "(---) zsh-syntax-highlighting plugin appears to already be installed; skipping."
     else
-        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING $ZSH_CUSTOM/plugins/zsh-syntax-hightlighting
+        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-hightlighting
     fi
 }
 
