@@ -43,9 +43,9 @@ setup () {
         echo "(---) oh-my-zsh appears to already be installed; skipping."
     else
         sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh --unattended)"
-        ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
     fi  
-
+    [ ! -z $ZSH_CUSTOM ] || ZSH_CUSTOM="$HOME/.oh-my-zsh/custom"
+    
     # Install powerlevel10k theme
     if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
         echo "(---) powerlevel10k appears to already be installed; skipping."
