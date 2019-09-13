@@ -5,70 +5,105 @@
 set -e
 
 # Filename patterns to exclude from symlinking.
-EXCLUDE="bootstrap.*|\.exclude*|\.swp|\.git$|\.gitignore|.*.md"
+#EXCLUDE="bootstrap.*|\.exclude*|\.swp|\.git$|\.gitignore|.*.md"
+EXCLUDE=(
+    "bootstrap.*"
+    "\.exclude*"
+    "\.swp"
+    "\.git$"
+    "\.gitignore$"
+    ".*.md"
+)
 
+### Perform some preflight checks.
+preflight () {
 
-### Initialize our environment.
-init () {
-    
+    # Check to make sure we have the right tools installed.
+    prereqs=(zsh curl git)
+    for i in $prereqs; do
+        which -s $i || {
+            echo "$i needs to be installed to continue.";
+            exit 1;
+        }
+    done
+
+}
+
+### Setup our environment.
+setup () {
+   
     # Make a directory to store backups of original files.
-    local datestamp=`date +%Y%m%d-%H%M`
+    datestamp=`date +%Y%m%d-%H%M`
     backupdir="${HOME}/.dotfiles.orig.$datestamp"
-    echo "BOOTSTRAP: Creating backup directory: $backupdir"
+    echo "(---) Creating backup directory: $backupdir"
     mkdir -p $backupdir
 
-    # Clone our ZFS framework (slimzsh)
-    if [[ ! -d $HOME/.slimzsh ]]; then 
-        echo "BOOTSTRAP: Cloning SlimZSH into $HOME/.slimzsh:"
-        git clone --recursive https://github.com/changs/slimzsh.git $HOME/.slimzsh
+    # Install oh-my-zsh framework
+    if [ -d $HOME/.oh-my-zsh ]; then
+        echo "(---) oh-my-zsh appears to already be installed; skipping."
     else
-        echo "BOOTSTRAP: (!!) SlimZSH appears to already be installed.  Skipping."
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    fi  
+
+    # Install powerlevel10k theme
+    if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
+        echo "(---) powerlevel10k appears to already be installed; skipping."
+    else
+        git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k
+    fi
+
+    # Install zsh-syntax-highlighting plugin
+    if [ -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
+        echo "(---) zsh-syntax-highlighting plugin appears to already be installed; skipping."
+    else
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-hightlighting
     fi
 }
 
 ### Link our files.
 link () {
 
-	echo -n "BOOTSTRAP: This utility will install dotfiles into $HOME. Proceed? [y/n]: "
-	read resp
+    exclude_string=`echo $EXCLUDE | sed -E 's/ /|/g'`
 
-    case $resp in
-        Y|y)
-            for file in $( ls -A | grep -vE $EXCLUDE ) ; do
-                if [ -f ${HOME}/${file} ]; then  
-                    mv "${HOME}/${file}" $backupdir
-                fi
-                ln -sf $PWD/$file $HOME || echo "BOOTSTRAP: (!!) Unable to symlink $HOME/$file."
-            done
-            echo "BOOTSTRAP: Symlinking complete."
-            echo "BOOTSTRAP: Originals backed up in $backupdir."
-            ;; 
-        *)
-            echo "BOOTSTRAP: (!!) Cancelled by user."
-            rmdir $backupdir
-            exit 1
-            ;;
-    esac        
+    for file in $( ls -A | grep -vE $exclude_string ) ; do
+        if [ -f $HOME/$file ]; then  
+            mv "$HOME/$file" $backupdir
+        fi
+        ln -sf $PWD/$file $HOME || echo "(!!!) Unable to symlink $HOME/$file."
+    done
+    echo "(---) Symlinking done.  Originals backed up in $backupdir."
+
 }
 
-### Install OS-specific tools where needed.
+### Install additional OS-specific tools where needed.
 install_tools () {
 
     OS=`uname`
 
     # MacOS
     if [[ $OS == "Darwin" ]]; then
-        echo "BOOTSTRAP: No MacOS-specific tools to install."
+        echo "(---) No MacOS-specific tools to install."
     fi
 
     # Linux
     if [[ $OS == "Linux" ]]; then
-        echo "BOOTSTRAP: No Linux-specific tools to install."
+        echo "(---) No Linux-specific tools to install."
     fi
+
 }
 
-
-init
-link
-install_tools
-echo "BOOTSTRAP: Bye!"
+echo -n "This script will set up ZSH and symlink dotfiles into $HOME. Proceed? [y/n]: "
+read resp
+case $resp in
+    Y|y)
+        preflight
+        setup
+        link
+        install_tools
+        echo "Done!"
+        ;;
+    *)
+        echo "Cancelled by user."
+        exit 1
+        ;;
+esac
