@@ -73,7 +73,7 @@ plugins=(git sudo ssh-agent zsh-syntax-highlighting)
 
 # ssh-agent plugin options
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities `find ${HOME}/.ssh -perm 0600 | xargs basename`
+zstyle :omz:plugins:ssh-agent identities `find ${HOME}/.ssh -perm 0600 -exec basename -a {} +`
 #zstyle :omz:plugins:ssh-agent lifetime 4h
 
 # Source oh-my-zsh
