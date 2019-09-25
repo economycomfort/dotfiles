@@ -13,6 +13,7 @@ For now:
 
 - ZSH (.zshrc, .zshenv, .zprofile, .zlogin, .zlogout)
 - vim (.vimrc)
+- tmux (.tmux.conf, .tmux.conf.local)
 - bootstrap.sh (installs required components where necessary, symlinks dotfiles from the repo back into $HOME)
 
 ## Installation
