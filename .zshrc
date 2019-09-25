@@ -132,11 +132,10 @@ case `uname` in
 esac
 
 # Google Cloud specific aliases
-if [ -x `which gcloud` ]; then
+which gcloud >/dev/null && {
     alias gcssh="gcloud alpha cloud-shell ssh"
     alias gcscp="gcloud alpha cloud-shell scp"
-fi
-
+}
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
