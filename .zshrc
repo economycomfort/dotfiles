@@ -73,7 +73,7 @@ plugins=(git sudo ssh-agent zsh-syntax-highlighting)
 
 # ssh-agent plugin options
 zstyle :omz:plugins:ssh-agent agent-forwarding on
-zstyle :omz:plugins:ssh-agent identities id_rsa sandbox_rsa vectra_main_2019
+zstyle :omz:plugins:ssh-agent identities `find ${HOME}/.ssh -perm 0600 | xargs basename`
 #zstyle :omz:plugins:ssh-agent lifetime 4h
 
 # Source oh-my-zsh
@@ -136,7 +136,6 @@ if [ -x `which gcloud` ]; then
     alias gcssh="gcloud alpha cloud-shell ssh"
     alias gcscp="gcloud alpha cloud-shell scp"
 fi
-
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
