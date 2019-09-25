@@ -96,6 +96,22 @@ source $ZSH/oh-my-zsh.sh
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
+
+# Updates $PATH for Google Cloud SDK.
+if [ -f $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc ]; then
+    . $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc
+fi
+
+# Enables command completion for Google Cloud SDK.
+if [ -f $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc ]; then
+    . $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc
+fi
+
+# Nebula SSH scripts
+if [ -d $HOME/Documents/Vectra/scripts/nebula ]; then
+    export PATH="$PATH:$HOME/Documents/Vectra/scripts/nebula"
+fi
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -115,18 +131,13 @@ case `uname` in
         ;;
 esac
 
-# Updates $PATH for Google Cloud SDK.
-if [ -f $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc ]; then
-    . $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc
+# Google Cloud specific aliases
+if [ -x `which gcloud` ]; then
+    alias gcssh="gcloud alpha cloud-shell ssh"
+    alias gcscp="gcloud alpha cloud-shell scp"
 fi
 
-# Enables command completion for Google Cloud SDK.
-if [ -f $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc ]; then
-    . $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc
-fi
 
-# Nebula scripts
-export PATH="$PATH:$HOME/Documents/Vectra/scripts/nebula"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
