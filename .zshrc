@@ -138,5 +138,11 @@ which gcloud >/dev/null && {
     alias gcscp="gcloud alpha cloud-shell scp"
 }
 
+# Make sure we have the appropriate terminal type set
+if [ $TERM != "xterm-256color" ]; then
+    TERM="xterm-256color"
+    export TERM
+fi
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
