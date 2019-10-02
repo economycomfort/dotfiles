@@ -2,6 +2,15 @@
 #
 # Bootstraps a fresh zsh environment.
 #
+# Checks to ensure git, curl, and zsh are installed.
+# Installs oh-my-zsh into $HOME.
+# Symlinks dotfiles within the same directory as this script into $HOME.
+# Creates backups of any originals in $HOME/.dotfiles.orig.$datestamp.
+# Sets user's default shell to zsh.
+#
+# David Brooks <dabrooks@outlook.com>
+# https://github.com/zerobaud
+#
 set -e
 
 # A few variables to define where to grab content.
@@ -80,28 +89,32 @@ link () {
 
 }
 
-### Install additional OS-specific tools where needed.
-install_tools () {
+### Run any operations after environment has ben set up..
+postflight () {
 
-    OS=`uname`
+    # Any operating system-specific postflight actions.
+    case `uname` in
+        Darwin)
+            echo "(---) No MacOS-specific postflight actions to take."
+            ;;
+        Linux)
+            echo "(---) No Linux-specific postflight actions to take."
+            ;;
+        *BSD)
+            echo "(---) No BSD-specific postflight actions to take."
+            ;;
+    esac
 
-    # MacOS
-    if [[ $OS == "Darwin" ]]; then
-        echo "(---) No MacOS-specific tools to install."
-    fi
-
-    # Linux
-    if [[ $OS == "Linux" ]]; then
-        echo "(---) No Linux-specific tools to install."
-    fi
+    # Change user's default shell to zsh.
+    chsh -s `which zsh` || echo "(!!!) Unable to set default shell to zsh."
 
 }
 
 cat << EOF
-This script will set up a ZSH environment and symlink several dotfiles into 
+This script will set up a zsh environment and symlink several dotfiles into 
 $HOME.
 
-The prompt theme for ZSH may require a nerdfont-patched font for certain 
+The prompt theme for zsh may require a nerdfont-patched font for certain 
 characters to display appropriately.  Please ensure the terminal you're using 
 is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)  
 
@@ -116,7 +129,7 @@ case $resp in
         preflight
         setup
         link
-        install_tools
+        postflight
         echo "Done!"
         ;;
     *)
