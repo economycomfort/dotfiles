@@ -35,7 +35,7 @@ preflight () {
 
 ### Setup our environment.
 setup () {
-   
+    
     # Make a directory to store backups of original files.
     datestamp=`date +%Y%m%d-%H%M`
     backupdir="${HOME}/.dotfiles.orig.$datestamp"
@@ -62,6 +62,7 @@ setup () {
     else
         git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     fi
+
 }
 
 ### Link our files.
@@ -96,7 +97,19 @@ install_tools () {
 
 }
 
-echo -n "This script will set up ZSH and symlink dotfiles into $HOME. Proceed? [y/n]: "
+cat << EOF
+This script will set up a ZSH environment and symlink several dotfiles into 
+$HOME.
+
+The prompt theme for ZSH may require a nerdfont-patched font for certain 
+characters to display appropriately.  Please ensure the terminal you're using 
+is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)  
+
+For more information:
+https://www.nerdfonts.com
+
+Proceed? [y/n]
+EOF
 read resp
 case $resp in
     Y|y)
