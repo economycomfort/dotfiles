@@ -2,9 +2,9 @@
 Various dotfiles for personal use.
 
 ## Description
-Collection of personal dotfiles for use on my own systems.  Probably nothing terribly unique or exciting, but should set up a decent ZSH environment and include some usable configs for vim, tmux, and other utilities as I need them.
+Collection of personal dotfiles for use on my own systems.  Probably nothing terribly unique or exciting, but should set up a decent zsh environment and include some usable configs for vim, tmux, and other utilities as I need them.
 
-Tested on MacOS Mojave and Debian Stretch using recent versions of ZSH.
+Tested on MacOS Mojave and Debian Stretch using recent versions of zsh.
 Not tested on BSD, but should work just fine.
 Cygwin?  All bets are off, you monster.
 
