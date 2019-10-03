@@ -11,7 +11,7 @@ Cygwin?  All bets are off, you monster.
 ## Components
 For now:
 
-- ZSH (.zshrc, .zshenv, .zprofile, .zlogin, .zlogout)
+- zsh (.zshrc, .zshenv, .zprofile, .zlogin, .zlogout)
 - vim (.vimrc)
 - tmux (.tmux.conf, .tmux.conf.local)
 - bootstrap.sh (installs required components where necessary, symlinks dotfiles from the repo back into $HOME)
