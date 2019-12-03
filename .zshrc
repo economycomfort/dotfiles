@@ -148,4 +148,6 @@ fi
 [[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
 
 # Source in custom options
-source ${HOME}/.zshcustom
+if [ -f $HOME/.zshcustom ]; then
+    source ${HOME}/.zshcustom
+fi
