@@ -72,7 +72,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git sudo ssh-agent zsh-syntax-highlighting)
 
 # ssh-agent plugin options
-sshkeys=(`file ${HOME}/.ssh/* | grep "OpenSSH private" | sed 's/:.*//'`)
+sshkeys=(`file ${HOME}/.ssh/* | egrep "OpenSSH private|PEM RSA" | sed 's/:.*//'`)
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities `echo $sshkeys | xargs basename -a`
 #zstyle :omz:plugins:ssh-agent lifetime 4h
