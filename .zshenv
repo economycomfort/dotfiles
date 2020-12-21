@@ -24,5 +24,5 @@ if [ -d $HOME/.local/bin ]; then
 fi
 
 # Export the $PATH (should always be last, probably)
-export $PATH
+export PATH
 
