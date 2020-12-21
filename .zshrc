@@ -72,7 +72,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git sudo ssh-agent zsh-syntax-highlighting)
 
 # ssh-agent plugin options
-sshkeys=(`file ${HOME}/.ssh/* | egrep "BEGIN OPENSSH|BEGIN RSA" | sed 's/:.*//'`)
+sshkeys=(`file ${HOME}/.ssh/* | egrep "private key" | sed 's/:.*//'`)
 zstyle :omz:plugins:ssh-agent agent-forwarding on
 zstyle :omz:plugins:ssh-agent identities `echo $sshkeys | xargs basename -a`
 #zstyle :omz:plugins:ssh-agent lifetime 4h
@@ -96,22 +96,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
-
-
-# Updates $PATH for Google Cloud SDK.
-if [ -f $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc ]; then
-    . $HOME/Documents/GCP/google-cloud-sdk/path.zsh.inc
-fi
-
-# Enables command completion for Google Cloud SDK.
-if [ -f $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc ]; then
-    . $HOME/Documents/GCP/google-cloud-sdk/completion.zsh.inc
-fi
-
-# Nebula SSH scripts
-if [ -d $HOME/Documents/Vectra/scripts/nebula ]; then
-    export PATH="$PATH:$HOME/Documents/Vectra/scripts/nebula"
-fi
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -138,6 +122,7 @@ if command -v pyenv 1>/dev/null 2>&1; then
 fi
 
 # Google Cloud specific aliases
+# See .zshenv for GCP-specific $PATH
 which gcloud >/dev/null && {
     alias gcssh="gcloud alpha cloud-shell ssh"
     alias gcscp="gcloud alpha cloud-shell scp"
