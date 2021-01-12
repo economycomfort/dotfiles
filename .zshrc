@@ -106,16 +106,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Set our ls options appropriately.
-case `uname` in
-    Linux)
-        alias ls="ls --color -F"
-        ;;
-    Darwin|*BSD)
-        alias ls="ls -GF"
-        ;;
-esac
-
 # Python environment
 if command -v pyenv 1>/dev/null 2>&1; then
     eval "$(pyenv init -)"
