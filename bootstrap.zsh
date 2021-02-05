@@ -48,26 +48,26 @@ setup () {
     # Make a directory to store backups of original files.
     datestamp=`date +%Y%m%d-%H%M`
     backupdir="${HOME}/.dotfiles.orig.$datestamp"
-    echo "(---) Creating backup directory: $backupdir"
+    echo "+ Creating backup directory: $backupdir"
     mkdir -p $backupdir
 
     # Install oh-my-zsh framework
     if [ -d $HOME/.oh-my-zsh ]; then
-        echo "(---) oh-my-zsh appears to already be installed; skipping."
+        echo "+ oh-my-zsh appears to already be installed; skipping."
     else
         sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
     fi  
     
     # Install powerlevel10k theme
     if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
-        echo "(---) powerlevel10k appears to already be installed; skipping."
+        echo "+ powerlevel10k appears to already be installed; skipping."
     else
         git clone $URL_P10K ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
     fi
 
     # Install zsh-syntax-highlighting plugin
     if [ -d $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
-        echo "(---) zsh-syntax-highlighting plugin appears to already be installed; skipping."
+        echo "+ zsh-syntax-highlighting plugin appears to already be installed; skipping."
     else
         git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     fi
@@ -85,7 +85,7 @@ link () {
         fi
         ln -sf $PWD/$file $HOME || echo "(!!!) Unable to symlink $HOME/$file."
     done
-    echo "(---) Symlinking done.  Originals backed up in $backupdir."
+    echo "+ Symlinking done.  Originals backed up in $backupdir."
 
 }
 
@@ -95,18 +95,18 @@ postflight () {
     # Any operating system-specific postflight actions.
     case `uname` in
         Darwin)
-            echo "(---) No MacOS-specific postflight actions to take."
+            echo "+ No MacOS-specific postflight actions to take."
             ;;
         Linux)
-            echo "(---) No Linux-specific postflight actions to take."
+            echo "+ No Linux-specific postflight actions to take."
             ;;
         *BSD)
-            echo "(---) No BSD-specific postflight actions to take."
+            echo "+ No BSD-specific postflight actions to take."
             ;;
     esac
 
     # Change user's default shell to zsh.
-    chsh -s `which zsh` || echo "(!!!) Unable to set default shell to zsh."
+    chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
 
 }
 
