@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 #
 # Bootstraps a fresh zsh environment.
 #
@@ -17,6 +17,11 @@ set -e
 URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 URL_P10K="https://github.com/romkatv/powerlevel10k.git"
 URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+
+# Determine if this script should run interactively
+if [[ $1 =~ [Yy][Ee][Ss] || $1 =~ [Yy] ]]; then
+    silent=1
+fi
 
 # Filename patterns to exclude from symlinking.
 EXCLUDE=(
@@ -110,7 +115,8 @@ postflight () {
 
 }
 
-cat << EOF
+if [ ! $silent ]; then
+    cat << EOF
 This script will set up a zsh environment and symlink several dotfiles into 
 $HOME.
 
@@ -123,7 +129,11 @@ https://www.nerdfonts.com
 
 Proceed? [y/n]
 EOF
-read resp
+    read resp
+else
+    resp='y'
+fi
+
 case $resp in
     Y|y)
         preflight
