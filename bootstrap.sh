@@ -119,7 +119,7 @@ postflight () {
     esac
 
     # Change user's default shell to zsh.
-    chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
+    #chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
 
 }
 
@@ -148,7 +148,7 @@ case $resp in
         setup
         link
         postflight
-        echo "Done!"
+        echo "Done!  Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
         ;;
     *)
         echo "Cancelled by user."
