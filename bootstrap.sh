@@ -24,14 +24,15 @@ if [[ $1 =~ [Yy][Ee][Ss] || $1 =~ [Yy] ]]; then
 fi
 
 # Filename patterns to exclude from symlinking.
-EXCLUDE=(
-    "bootstrap.*"
-    "\.exclude*"
-    "\.swp"
-    "\.git$"
-    "\.gitignore$"
-    ".*.md"
+EXCLUDE=( 
+    "bootstrap.*" 
+    "\.exclude*" 
+    "\.swp" 
+    "\.git$" 
+    "\.gitignore$" 
+    ".*.md" 
 )
+
 
 ### Perform some preflight checks.
 preflight () {
@@ -82,7 +83,7 @@ setup () {
 ### Link our files.
 link () {
 
-    exclude_string=`echo $EXCLUDE | sed -E 's/ /|/g'`
+    exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
 
     for file in $( ls -A | grep -vE $exclude_string ) ; do
         if [ -f $HOME/$file ]; then  
