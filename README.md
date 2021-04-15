@@ -20,7 +20,7 @@ For now:
 
 1. Clone this repository.
 2. Ensure you have zsh, curl, and git installed.
-3. Run bootstrap.zsh.
+3. Run bootstrap.sh.
 
 Backups of any existing symlinked files will be saved in $HOME/.dotfiles.orig.$datestamp.
 
