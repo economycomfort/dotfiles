@@ -48,7 +48,11 @@ preflight () {
 
     # We need to understand what path this script is in.
     # If not, there's a risk we destroy a home directory with useless symlinks.
-    boostrap_path=`dirname $0`
+    # If we're in the same directory as this script, we'll use $PWD.
+    bootstrap_path=`dirname $0`
+    if [[ $bootstrap_path == "." ]]; then
+        bootstrap_path=$PWD
+    fi
 
 }
 
@@ -62,24 +66,24 @@ setup () {
     mkdir -p $backupdir
 
     # Install oh-my-zsh framework
-    if [ -d $HOME/.oh-my-zsh ]; then
+    if [ -d "${HOME}/.oh-my-zsh" ]; then
         echo "+ oh-my-zsh appears to already be installed; skipping."
     else
-        sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
+        ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
     fi  
     
     # Install powerlevel10k theme
-    if [ -d $HOME/.oh-my-zsh/custom/themes/powerlevel10k ]; then
+    if [ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
         echo "+ powerlevel10k appears to already be installed; skipping."
     else
-        git clone $URL_P10K ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
+        git clone ${URL_P10K} ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
     fi
 
     # Install zsh-syntax-highlighting plugin
-    if [ -d ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
+    if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
         echo "+ zsh-syntax-highlighting plugin appears to already be installed; skipping."
     else
-        git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+        git clone ${URL_ZSH_SYNTAX_HIGHLIGHTING} ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     fi
 
 }
@@ -88,12 +92,11 @@ setup () {
 link () {
 
     exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
-
     for file in $( ls -A $bootstrap_path | grep -vE $exclude_string ) ; do
-        if [ -f $HOME/$file ]; then  
-            mv "$HOME/$file" $backupdir
+        if [ -f "${HOME}/${file}" ]; then  
+            mv "${HOME}/${file}" $backupdir
         fi
-        ln -sf ${bootstrap_path}/${file} $HOME/.${file} || echo "(!!!) Unable to symlink $HOME/$file."
+        ln -sf "${bootstrap_path}/${file}" "${HOME}/.${file}" || echo "(!!!) Unable to symlink $HOME/$file."
     done
     echo "+ Symlinking done.  Originals backed up in $backupdir."
 
