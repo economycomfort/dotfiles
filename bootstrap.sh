@@ -46,6 +46,10 @@ preflight () {
         }
     done
 
+    # We need to understand what path this script is in.
+    # If not, there's a risk we destroy a home directory with useless symlinks.
+    boostrap_path=`dirname $0`
+
 }
 
 ### Setup our environment.
@@ -85,11 +89,11 @@ link () {
 
     exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
 
-    for file in $( ls -A | grep -vE $exclude_string ) ; do
+    for file in $( ls -A $bootstrap_path | grep -vE $exclude_string ) ; do
         if [ -f $HOME/$file ]; then  
             mv "$HOME/$file" $backupdir
         fi
-        ln -sf $PWD/$file $HOME || echo "(!!!) Unable to symlink $HOME/$file."
+        ln -sf ${bootstrap_path}/${file} $HOME/.${file} || echo "(!!!) Unable to symlink $HOME/$file."
     done
     echo "+ Symlinking done.  Originals backed up in $backupdir."
 
