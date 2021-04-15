@@ -40,7 +40,7 @@ preflight () {
     # Check to make sure we have the right tools installed.
     prereqs=(zsh curl git)
     for i in $prereqs; do
-        which -s $i || {
+        which $i >/dev/null || {
             echo "$i needs to be installed to continue.";
             exit 1;
         }
