@@ -20,111 +20,110 @@ URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlightin
 
 # Determine if this script should run interactively
 if [[ $1 =~ [Yy][Ee][Ss] || $1 =~ [Yy] ]]; then
-    silent=1
+  silent=1
 fi
 
 # Filename patterns to exclude from symlinking.
 EXCLUDE=( 
-    "bootstrap.*" 
-    "\.exclude*" 
-    "\.swp" 
-    "\.git$" 
-    "\.gitignore$" 
-    ".*.md" 
+  "bootstrap.*" 
+  "\.exclude*" 
+  "\.swp" 
+  "\.git$" 
+  "\.gitignore$" 
+  ".*.md" 
 )
 
 
 ### Perform some preflight checks.
 preflight () {
 
-    # Check to make sure we have the right tools installed.
-    prereqs=(zsh curl git)
-    for i in $prereqs; do
-        which $i >/dev/null || {
-            echo "$i needs to be installed to continue.";
-            exit 1;
-        }
-    done
+  # Check to make sure we have the right tools installed.
+  prereqs=(zsh curl git)
+  for i in $prereqs; do
+    which $i >/dev/null || {
+      echo "$i needs to be installed to continue.";
+      exit 1;
+    }
+  done
 
-    # We need to understand what path this script is in.
-    # If not, there's a risk we destroy a home directory with useless symlinks.
-    # If we're in the same directory as this script, we'll use $PWD.
-    bootstrap_path=`dirname $0`
-    if [[ $bootstrap_path == "." ]]; then
-        bootstrap_path=$PWD
-    fi
+  # We need to understand what path this script is in.
+  # If not, there's a risk we destroy a home directory with useless symlinks.
+  # If we're in the same directory as this script, we'll use $PWD.
+  bootstrap_path=`dirname $0`
+  if [[ $bootstrap_path == "." ]]; then
+    bootstrap_path=$PWD
+  fi
 
 }
 
 ### Setup our environment.
 setup () {
     
-    # Make a directory to store backups of original files.
-    datestamp=`date +%Y%m%d-%H%M`
-    backupdir="${HOME}/.dotfiles.orig.$datestamp"
-    echo "+ Creating backup directory: $backupdir"
-    mkdir -p $backupdir
+  # Make a directory to store backups of original files.
+  datestamp=`date +%Y%m%d-%H%M`
+  backupdir="${HOME}/.dotfiles.orig.$datestamp"
+  echo "+ Creating backup directory: $backupdir"
+  mkdir -p $backupdir
 
-    # Install oh-my-zsh framework
-    if [ -d "${HOME}/.oh-my-zsh" ]; then
-        echo "+ oh-my-zsh appears to already be installed; skipping."
-    else
-        ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
-    fi  
-    
-    # Install powerlevel10k theme
-    if [ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
-        echo "+ powerlevel10k appears to already be installed; skipping."
-    else
-        git clone ${URL_P10K} ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
-    fi
+  # Install oh-my-zsh framework
+  if [ -d "${HOME}/.oh-my-zsh" ]; then
+    echo "+ oh-my-zsh appears to already be installed; skipping."
+  else
+    ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
+  fi  
+  
+  # Install powerlevel10k theme
+  if [ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
+    echo "+ powerlevel10k appears to already be installed; skipping."
+  else
+    git clone ${URL_P10K} ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
+  fi
 
-    # Install zsh-syntax-highlighting plugin
-    if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
-        echo "+ zsh-syntax-highlighting plugin appears to already be installed; skipping."
-    else
-        git clone ${URL_ZSH_SYNTAX_HIGHLIGHTING} ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
-    fi
+  # Install zsh-syntax-highlighting plugin
+  if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+    echo "+ zsh-syntax-highlighting plugin appears to already be installed; skipping."
+  else
+    git clone ${URL_ZSH_SYNTAX_HIGHLIGHTING} ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+  fi
 
 }
 
 ### Link our files.
 link () {
 
-    exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
-    for file in $( ls -A $bootstrap_path | grep -vE $exclude_string ) ; do
-        if [ -f "${HOME}/${file}" ]; then  
-            mv "${HOME}/${file}" $backupdir
-        fi
-        ln -sf "${bootstrap_path}/${file}" "${HOME}/.${file}" || echo "(!!!) Unable to symlink $HOME/$file."
-    done
-    echo "+ Symlinking done.  Originals backed up in $backupdir."
+  exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
+  for file in $( ls -A $bootstrap_path | grep -vE $exclude_string ) ; do
+    if [ -f "${HOME}/${file}" ]; then  
+      mv "${HOME}/${file}" $backupdir
+    fi
+    ln -sf "${bootstrap_path}/${file}" "${HOME}/.${file}" || echo "(!!!) Unable to symlink $HOME/$file."
+  done
+  echo "+ Symlinking done.  Originals backed up in $backupdir."
 
 }
 
-### Run any operations after environment has ben set up..
+### Run any OS-specific operations after environment has been set up.
 postflight () {
 
-    # Any operating system-specific postflight actions.
-    case `uname` in
-        Darwin)
-            echo "+ No MacOS-specific postflight actions to take."
-            ;;
-        Linux)
-            echo "+ No Linux-specific postflight actions to take."
-            ;;
-        *BSD)
-            echo "+ No BSD-specific postflight actions to take."
-            ;;
-    esac
+  case `uname` in
+    Darwin)
+      echo "+ No MacOS-specific postflight actions to take."
+      ;;
+    Linux)
+      echo "+ No Linux-specific postflight actions to take."
+      ;;
+    *BSD)
+      echo "+ No BSD-specific postflight actions to take."
+      ;;
+  esac
 
-    # Change user's default shell to zsh.
-    #chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
+  # Change user's default shell to zsh.
+  #chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
 
 }
 
 if [ ! $silent ]; then
-    cat << EOF
+  cat << EOF
 This script will set up a zsh environment and symlink several dotfiles into 
 $HOME.
 
@@ -134,24 +133,26 @@ is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)
 
 For more information:
 https://www.nerdfonts.com
-
-Proceed? [y/n]
 EOF
-    read resp
+
+  echo -n "Proceed? [y/n] "
+  read resp
 else
-    resp='y'
+  resp='y'
 fi
 
 case $resp in
-    Y|y)
-        preflight
-        setup
-        link
-        postflight
-        echo "Done!  Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
-        ;;
-    *)
-        echo "Cancelled by user."
-        exit 1
-        ;;
+  Y|y)
+    preflight
+    setup
+    link
+    postflight
+    ;;
+  *)
+    echo "Cancelled by user."
+    exit 1
+    ;;
 esac
+
+echo
+echo "Done!  Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"

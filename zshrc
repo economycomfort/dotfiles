@@ -81,9 +81,9 @@ plugins=(sudo ssh-agent tmux git docker-compose command-not-found zsh-syntax-hig
 # ssh-agent plugin options
 sshkeys=(`file ${HOME}/.ssh/* | egrep "private key" | sed 's/:.*//'`)
 if [ -n "$sshkeys" ]; then
-    zstyle :omz:plugins:ssh-agent agent-forwarding on
-    zstyle :omz:plugins:ssh-agent identities `basename -a $sshkeys`
-    #zstyle :omz:plugins:ssh-agent lifetime 4h
+  zstyle :omz:plugins:ssh-agent agent-forwarding on
+  zstyle :omz:plugins:ssh-agent identities `basename -a $sshkeys`
+  #zstyle :omz:plugins:ssh-agent lifetime 4h
 fi
 
 # Source oh-my-zsh
@@ -117,20 +117,20 @@ source $ZSH/oh-my-zsh.sh
 
 # Python environment
 if command -v pyenv 1>/dev/null 2>&1; then
-    eval "$(pyenv init -)"
+  eval "$(pyenv init -)"
 fi
 
 # Google Cloud specific aliases
 # See .zshenv for GCP-specific $PATH
 which gcloud >/dev/null && {
-    alias gcssh="gcloud alpha cloud-shell ssh"
-    alias gcscp="gcloud alpha cloud-shell scp"
+  alias gcssh="gcloud alpha cloud-shell ssh"
+  alias gcscp="gcloud alpha cloud-shell scp"
 }
 
 # Make sure we have the appropriate terminal type set
 if [ $TERM != "xterm-256color" ]; then
-    TERM="xterm-256color"
-    export TERM
+  TERM="xterm-256color"
+  export TERM
 fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
@@ -138,8 +138,5 @@ fi
 
 # Source in custom options
 if [ -f $HOME/.zshcustom ]; then
-    source ${HOME}/.zshcustom
+  source ${HOME}/.zshcustom
 fi
-
-# To customize prompt, run `p10k configure` or edit ~/Documents/repos/dotfiles/p10k.zsh.
-[[ ! -f ~/Documents/repos/dotfiles/p10k.zsh ]] || source ~/Documents/repos/dotfiles/p10k.zsh
