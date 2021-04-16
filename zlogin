@@ -14,6 +14,13 @@
 
 # Run only if interactive.
 [[ -o INTERACTIVE && -t 2 ]] && {
+  
+  # Figurine!
+  if (( $+commands[figurine] )); then
+    echo ""
+    $commands[figurine] -f "3d.flf" `hostname`
+    echo ""
+  fi
 
   # Print a random fortune.
   if (( $+commands[fortune] )); then
