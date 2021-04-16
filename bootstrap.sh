@@ -133,10 +133,12 @@ is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)
 
 For more information:
 https://www.nerdfonts.com
+
 EOF
 
   echo -n "Proceed? [y/n] "
   read resp
+  echo
 else
   resp='y'
 fi
