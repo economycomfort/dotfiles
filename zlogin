@@ -17,9 +17,9 @@
   
   # Figurine!
   if (( $+commands[figurine] )); then
-    echo ""
+    echo
     $commands[figurine] -f "3d.flf" `hostname`
-    echo ""
+    echo
   fi
 
   # Print a random fortune.

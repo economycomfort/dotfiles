@@ -82,7 +82,7 @@ plugins=(sudo ssh-agent tmux git docker-compose command-not-found zsh-syntax-hig
 sshkeys=(`file ${HOME}/.ssh/* | egrep "private key" | sed 's/:.*//'`)
 if [ -n "$sshkeys" ]; then
     zstyle :omz:plugins:ssh-agent agent-forwarding on
-    zstyle :omz:plugins:ssh-agent identities `echo $sshkeys | xargs basename -a`
+    zstyle :omz:plugins:ssh-agent identities `basename -a $sshkeys`
     #zstyle :omz:plugins:ssh-agent lifetime 4h
 fi
 
