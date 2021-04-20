@@ -5,7 +5,7 @@
 # Checks to ensure git, curl, and zsh are installed.
 # Installs oh-my-zsh into $HOME.
 # Symlinks dotfiles within the same directory as this script into $HOME.
-# Creates backups of any originals in $HOME/.dotfiles.orig.$datestamp.
+# Creates backups of any originals in $HOME/.dotfiles.bak.$datestamp.
 # Sets user's default shell to zsh.
 #
 # David Brooks <dabrooks@outlook.com>
@@ -61,7 +61,7 @@ setup () {
     
   # Make a directory to store backups of original files.
   datestamp=`date +%Y%m%d-%H%M`
-  backupdir="${HOME}/.dotfiles.orig.$datestamp"
+  backupdir="${HOME}/.dotfiles.bak.$datestamp"
   echo "+ Creating backup directory: $backupdir"
   mkdir -p $backupdir
 
