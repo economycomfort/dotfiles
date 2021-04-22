@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 #
-# Bootstraps a fresh zsh environment.
+# Copies various dotfiles into place.
 #
 # Checks to ensure git, curl, and zsh are installed.
 # Installs oh-my-zsh into $HOME.
 # Symlinks dotfiles within the same directory as this script into $HOME.
 # Creates backups of any originals in $HOME/.dotfiles.bak.$datestamp.
-# Sets user's default shell to zsh.
 #
 # David Brooks <dabrooks@outlook.com>
-# https://github.com/zerobaud
+# https://github.com/zerobaud/dotfiles
 #
 set -e
 
@@ -18,30 +17,27 @@ URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/too
 URL_P10K="https://github.com/romkatv/powerlevel10k.git"
 URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
-# Determine if this script should run interactively
-if [[ $1 =~ [Yy][Ee][Ss] || $1 =~ [Yy] ]]; then
-  silent=1
-fi
 
 # Filename patterns to exclude from symlinking.
 EXCLUDE=( 
   "bootstrap.*" 
   "\.exclude*" 
   "\.swp" 
-  "\.git$" 
+  "\.git$"
+  "\.git*" 
   "\.gitignore$" 
   ".*.md" 
 )
 
 
-### Perform some preflight checks.
+### Perform preflight checks.
 preflight () {
 
   # Check to make sure we have the right tools installed.
   prereqs=(zsh curl git)
   for i in $prereqs; do
     which $i >/dev/null || {
-      echo "$i needs to be installed to continue.";
+      echo -e "${textred}$i needs to be installed to continue.${textnorm}";
       exit 1;
     }
   done
@@ -56,49 +52,63 @@ preflight () {
 
 }
 
-### Setup our environment.
+### Setup the environment.
 setup () {
     
   # Make a directory to store backups of original files.
   datestamp=`date +%Y%m%d-%H%M`
   backupdir="${HOME}/.dotfiles.bak.$datestamp"
-  echo "+ Creating backup directory: $backupdir"
+  echo -e "${textgreen}+${textnorm} Creating backup directory: $backupdir"
   mkdir -p $backupdir
 
   # Install oh-my-zsh framework
   if [ -d "${HOME}/.oh-my-zsh" ]; then
-    echo "+ oh-my-zsh appears to already be installed; skipping."
+    echo -e "${textwhite}-${textnorm} oh-my-zsh appears to already be installed; skipping."
   else
     ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
   fi  
   
   # Install powerlevel10k theme
   if [ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
-    echo "+ powerlevel10k appears to already be installed; skipping."
+    echo -e "${textwhite}-${textnorm} powerlevel10k appears to already be installed; skipping."
   else
+    echo -e "${textgreen}+${textnorm} Cloning powerlevel10k theme:"
     git clone ${URL_P10K} ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
   fi
 
   # Install zsh-syntax-highlighting plugin
   if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
-    echo "+ zsh-syntax-highlighting plugin appears to already be installed; skipping."
+    echo -e "${textwhite}-${textnorm} zsh-syntax-highlighting plugin appears to already be installed; skipping."
   else
+    echo -e "${textgreen}+${textnorm} Cloning zsh-syntax-highlighting plugin:"
     git clone ${URL_ZSH_SYNTAX_HIGHLIGHTING} ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   fi
 
 }
 
-### Link our files.
-link () {
+### Link (or copy) the files.
+placefiles () {
 
-  exclude_string=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
-  for file in $( ls -A $bootstrap_path | grep -vE $exclude_string ) ; do
-    if [ -f "${HOME}/${file}" ]; then  
-      mv "${HOME}/${file}" $backupdir
+  exclude_str=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
+  
+  # See -c command line argument
+  if [[ $copyfiles == yes ]]; then
+    cmd="cp -rp"
+  else
+    cmd="ln -sf"
+  fi
+
+  # Get the whole list of files to copy
+  filelist=`du -a $bootstrap_path | sed -e 's/^[0-9]*\t//' | egrep '\/\.[A-Z,a-z,0-9]' | egrep -v $exclude_str`
+
+  #for file in $( ls -A $bootstrap_path | grep -vE $exclude_str ) ; do
+  for file in $filelist; do
+    if [ -f "${HOME}/`basename ${file}`" ]; then  
+      mv "${HOME}/`basename ${file}`" $backupdir
     fi
-    ln -sf "${bootstrap_path}/${file}" "${HOME}/.${file}" || echo "(!!!) Unable to symlink $HOME/$file."
+    $cmd "${file}" "${HOME}/`basename ${file}`" || echo "(!!!) Unable to place $HOME/`basename $file`."
   done
-  echo "+ Symlinking done.  Originals backed up in $backupdir."
+  echo -e "${textgreen}+${textnorm} Symlinking done.  Originals backed up in $backupdir."
 
 }
 
@@ -107,13 +117,13 @@ postflight () {
 
   case `uname` in
     Darwin)
-      echo "+ No MacOS-specific postflight actions to take."
+      echo -e "${textwhite}-${textnorm} No MacOS-specific postflight actions to take."
       ;;
     Linux)
-      echo "+ No Linux-specific postflight actions to take."
+      echo -e "${textwhite}-${textnorm} No Linux-specific postflight actions to take."
       ;;
     *BSD)
-      echo "+ No BSD-specific postflight actions to take."
+      echo -e "${textwhite}-${textnorm} No BSD-specific postflight actions to take."
       ;;
   esac
 
@@ -122,39 +132,99 @@ postflight () {
 
 }
 
-if [ ! $silent ]; then
-  cat << EOF
-This script will set up a zsh environment and symlink several dotfiles into 
-$HOME.
+### Print usage instructions.
+usage () {
+
+  echo "Usage: $0 (-chsy?)"
+  echo
+  echo "  -c:     Copies dotfiles instead of symlinking them (default: symlink)"
+  echo "  -s:     Sets default shell to zsh (default: no)"
+  echo "  -y:     Do not run interactively; jump right in (default: interactive)"
+  echo "  -h|-?:  Prints this help message"
+  echo
+
+}
+
+
+### Here we go!
+
+# Validate command line options
+while getopts ":chy" options; do
+  case $options in
+    c)
+      copyfiles="yes"
+      ;;
+    h)
+      usage
+      exit 0
+      ;;
+    s)
+      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to zsh."
+      ;;
+    y)
+      interactive="no"
+      ;;
+    *)
+      echo "Unrecognized argument: ${OPTARG}"
+      usage 1>&2
+      exit 1
+      ;;
+  esac
+done
+
+# Define a few fancy colors
+textgreen="\033[1;32m"
+textred="\033[1;31m"
+textwhite="\033[1;37m"
+textnorm="\033[0m"
+
+# Define a user help message to display by default
+info=$(cat << EOM
+
+${textgreen}This script will:${textnorm}
+
+  - Install the oh-my-zsh framework into $HOME/.oh-my-zsh;
+  - Install the powerlevel10k zsh theme into $HOME/.oh-my-zsh/custom/themes;
+  - Install extra zsh modules into $HOME/.oh-my-zsh/custom/plugins;
+  - Symlink (or copy, depending on usage) several dotfiles into $HOME;
+  - Attempt to back up any existing files into $HOME/.dotfiles.bak.XXXXXXXX.
+
+${textgreen}Note:${textnorm}
 
 The prompt theme for zsh may require a nerdfont-patched font for certain 
 characters to display appropriately.  Please ensure the terminal you're using 
 is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)  
 
-For more information:
+${textwhite}For more information on patched fonts:${textnorm}
+
 https://www.nerdfonts.com
+ 
+EOM
+)
 
-EOF
-
-  echo -n "Proceed? [y/n] "
+# Read user input (if run non-interactively, will skip - see "-y" option)
+if [[ $interactive != no ]]; then
+  echo -e "$info"
+  echo -ne "${textwhite}Proceed? [y/n]${textnorm} "
   read resp
-  echo
 else
-  resp='y'
+  resp="y"
 fi
-
+  
+# If user agrees, or script is running non-interactively, do it.
 case $resp in
   Y|y)
     preflight
     setup
-    link
+    placefiles
     postflight
+
+    echo
+    echo -e "${textwhite}Done!${textnorm}"
+    echo "Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
     ;;
   *)
-    echo "Cancelled by user."
+    echo -e "${textred}Cancelled by user.${textnorm}"
     exit 1
     ;;
 esac
-
-echo
-echo "Done!  Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
