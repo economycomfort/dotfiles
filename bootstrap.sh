@@ -150,7 +150,7 @@ usage () {
   echo "Usage: $0 (-chsy)"
   echo
   echo "  -c:  Copies dotfiles instead of symlinking them (default: symlink)"
-  echo "  -s:  Sets default shell to zsh (default: no)"
+  echo "  -s:  Sets default shell to zsh (default: no, will prompt for user password)"
   echo "  -y:  Do not run interactively; jump right in (default: interactive)"
   echo "  -h:  Prints this help message"
   echo
@@ -171,7 +171,7 @@ while getopts ":chsy" options; do
       exit 0
       ;;
     s)
-      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to zsh."
+      chsh="yes"
       ;;
     y)
       interactive="no"
@@ -232,9 +232,14 @@ case $resp in
     placefiles
     postflight
 
-    echo
+    if [[ $chsh == yes ]]; then
+      echo -e "${textwhite}-${textnorm}Changing user shell to `which zsh`, password prompt to follow:"
+      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to zsh."
+    else
+      echo
+      echo "Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
+    fi
     echo -e "${textwhite}Done!${textnorm}"
-    echo "Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
     ;;
   *)
     echo -e "${textred}Cancelled by user.${textnorm}"
