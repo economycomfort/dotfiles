@@ -233,7 +233,7 @@ case $resp in
     postflight
 
     if [[ $chsh == yes ]]; then
-      echo -e "${textwhite}-${textnorm}Changing user shell to `which zsh`, password prompt to follow:"
+      echo -e "${textwhite}-${textnorm} Changing user shell to `which zsh`, password prompt to follow:"
       chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to zsh."
     else
       echo
