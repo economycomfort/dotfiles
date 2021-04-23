@@ -23,7 +23,7 @@ EXCLUDE=(
   "bootstrap.*"
   "\.exclude*"
   "\.swp"
-  "\.git"
+  "\.git*"
   "\.md"
 )
 
