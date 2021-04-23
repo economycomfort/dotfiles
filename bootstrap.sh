@@ -19,14 +19,12 @@ URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlightin
 
 
 # Filename patterns to exclude from symlinking.
-EXCLUDE=( 
-  "bootstrap.*" 
-  "\.exclude*" 
-  "\.swp" 
-  "\.git$"
-  "\.git*" 
-  "\.gitignore$" 
-  ".*.md" 
+EXCLUDE=(
+  "bootstrap.*"
+  "\.exclude*"
+  "\.swp"
+  "\.git"
+  "\.md"
 )
 
 
@@ -62,26 +60,26 @@ setup () {
   mkdir -p $backupdir
 
   # Install oh-my-zsh framework
-  if [ -d "${HOME}/.oh-my-zsh" ]; then
+  if [[ -d "${HOME}/.oh-my-zsh" ]]; then
     echo -e "${textwhite}-${textnorm} oh-my-zsh appears to already be installed; skipping."
   else
     ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
   fi  
   
   # Install powerlevel10k theme
-  if [ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]; then
+  if [[ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]]; then
     echo -e "${textwhite}-${textnorm} powerlevel10k appears to already be installed; skipping."
   else
     echo -e "${textgreen}+${textnorm} Cloning powerlevel10k theme:"
-    git clone ${URL_P10K} ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
+    git clone $URL_P10K ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
   fi
 
   # Install zsh-syntax-highlighting plugin
-  if [ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
+  if [[ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
     echo -e "${textwhite}-${textnorm} zsh-syntax-highlighting plugin appears to already be installed; skipping."
   else
     echo -e "${textgreen}+${textnorm} Cloning zsh-syntax-highlighting plugin:"
-    git clone ${URL_ZSH_SYNTAX_HIGHLIGHTING} ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   fi
 
 }
@@ -89,26 +87,40 @@ setup () {
 ### Link (or copy) the files.
 placefiles () {
 
-  exclude_str=`echo ${EXCLUDE[@]} | sed -E 's/ /|/g'`
-  
+  # $EXCLUDE is an array, and must be converted into a string prior to modifying
+  # the field delimiter.  Trust me, don't try and `echo $EXCLUDE[@] | sed`, it
+  # won't work.
+  exclude_str=${EXCLUDE[@]}
+  exclude_str=${exclude_str// /|}
+
   # See -c command line argument
   if [[ $copyfiles == yes ]]; then
     cmd="cp -rp"
+    verb="copy"
   else
     cmd="ln -sf"
+    verb="symlink"
   fi
 
   # Get the whole list of files to copy
-  filelist=`du -a $bootstrap_path | sed -e 's/^[0-9]*\t//' | egrep '\/\.[A-Z,a-z,0-9]' | egrep -v $exclude_str`
+  filelist=$( du -a $bootstrap_path | sed -e 's/^[0-9]*\t//' | egrep '\/\.[A-Z,a-z,0-9]' | egrep -v $exclude_str )
 
-  #for file in $( ls -A $bootstrap_path | grep -vE $exclude_str ) ; do
+  # Do it
   for file in $filelist; do
-    if [ -f "${HOME}/`basename ${file}`" ]; then  
+    #echo "DEBUG: $file"
+    if [[ -f "${HOME}/`basename ${file}`" ]]; then
+      #echo "DEBUG: Found ${HOME}/`basename ${file}`"
       mv "${HOME}/`basename ${file}`" $backupdir
     fi
-    $cmd "${file}" "${HOME}/`basename ${file}`" || echo "(!!!) Unable to place $HOME/`basename $file`."
+    #echo "DEBUG: ${verb}ing ${file} into ${HOME}/`basename ${file}`"
+    $cmd "${file}" "${HOME}/`basename ${file}`" || fail=1
+
+    if [[ $fail == 1 ]]; then
+      echo "${textred}!${textnorm} Unable to $verb $HOME/`basename $file`.  Permissions?"
+    fi
   done
-  echo -e "${textgreen}+${textnorm} Symlinking done.  Originals backed up in $backupdir."
+  echo -e "${textgreen}+${textnorm} ${verb}ing done.  Originals backed up in $backupdir."
+
 
 }
 
@@ -135,12 +147,12 @@ postflight () {
 ### Print usage instructions.
 usage () {
 
-  echo "Usage: $0 (-chsy?)"
+  echo "Usage: $0 (-chsy)"
   echo
-  echo "  -c:     Copies dotfiles instead of symlinking them (default: symlink)"
-  echo "  -s:     Sets default shell to zsh (default: no)"
-  echo "  -y:     Do not run interactively; jump right in (default: interactive)"
-  echo "  -h|-?:  Prints this help message"
+  echo "  -c:  Copies dotfiles instead of symlinking them (default: symlink)"
+  echo "  -s:  Sets default shell to zsh (default: no)"
+  echo "  -y:  Do not run interactively; jump right in (default: interactive)"
+  echo "  -h:  Prints this help message"
   echo
 
 }
@@ -208,6 +220,7 @@ if [[ $interactive != no ]]; then
   echo -ne "${textwhite}Proceed? [y/n]${textnorm} "
   read resp
 else
+  echo -e "${textgreen}Here we go${textnorm}"
   resp="y"
 fi
   
