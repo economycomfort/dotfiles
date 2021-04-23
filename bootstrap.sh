@@ -161,7 +161,7 @@ usage () {
 ### Here we go!
 
 # Validate command line options
-while getopts ":chy" options; do
+while getopts ":chsy" options; do
   case $options in
     c)
       copyfiles="yes"
