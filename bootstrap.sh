@@ -243,7 +243,7 @@ case $resp in
     echo -e "${textwhite}Done!${textnorm}"
     ;;
   *)
-    echo "Cancelled by user."
+    #echo "Cancelled by user."
     exit 1
     ;;
 esac
