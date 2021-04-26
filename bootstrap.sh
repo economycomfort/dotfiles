@@ -195,11 +195,11 @@ info=$(cat << EOM
 
 ${textgreen}This script will:${textnorm}
 
-  - Install the oh-my-zsh framework into $HOME/.oh-my-zsh;
-  - Install the powerlevel10k zsh theme into $HOME/.oh-my-zsh/custom/themes;
-  - Install extra zsh modules into $HOME/.oh-my-zsh/custom/plugins;
-  - Symlink (or copy, depending on usage) several dotfiles into $HOME;
-  - Attempt to back up any existing files into $HOME/.dotfiles.bak.XXXXXXXX.
+  - Install the oh-my-zsh framework into ${HOME}/.oh-my-zsh;
+  - Install the powerlevel10k zsh theme into ${HOME}/.oh-my-zsh/custom/themes;
+  - Install extra zsh modules into ${HOME}/.oh-my-zsh/custom/plugins;
+  - Symlink (or copy, depending on usage) several dotfiles into ${HOME};
+  - Attempt to back up any existing files into ${HOME}/.dotfiles.bak.XXXXXXXX.
 
 ${textgreen}Note:${textnorm}
 
