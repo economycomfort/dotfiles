@@ -225,6 +225,7 @@ else
 fi
   
 # If user agrees, or script is running non-interactively, do it.
+set -x
 case $resp in
   Y|y)
     preflight
@@ -246,3 +247,4 @@ case $resp in
     exit 1
     ;;
 esac
+set +x
