@@ -10,12 +10,12 @@ leverages others' work, plus customizations added by myself.
 - Oh My Tmux by [Gregory Pakosz](https://github.com/gpakosz/.tmux)
 - Various bits and pieces by [myself](https://github.com/zerobaud)
 
-Dotfiles here can be installed on most any unix-like system utilizing the 
-included bootstrap.sh script.  Run `bootstrap.sh -h` for usage.  Existing 
-files will be backed up into `~/.dotfiles.bak.$date`.
+Dotfiles here can be installed on most any Unix-like environment utilizing the included 
+`bootstrap.sh` script.  Run `bootstrap.sh -h` for usage; there is some optional 
+functionality.  Existing files will be backed up into `~/.dotfiles.bak.$date`.
 
 Tested on MacOS (Mojave, Big Sur), Debian Stretch, and Ubuntu 20.04 LTS using recent 
-versions of zsh.  I don't see why it wouldn't work on most anything Unix-like.
+versions of zsh.  I don't see why it wouldn't work on most anything.
 Cygwin?  All bets are off, you monster.
 
 ## Components
