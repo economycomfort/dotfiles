@@ -1,4 +1,4 @@
-# dotfiles
+# zerobaud/dotfiles
 Various dotfiles for personal use.
 
 ## Description
