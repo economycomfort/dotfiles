@@ -14,8 +14,8 @@ Dotfiles here can be installed on most any unix-like system utilizing the
 included bootstrap.sh script.  Run `bootstrap.sh -h` for usage.  Existing 
 files will be backed up into `~/.dotfiles.bak.$date`.
 
-Tested on MacOS Mojave and Debian Stretch using recent versions of zsh.
-Not tested on BSD, but should work just fine.
+Tested on MacOS (Mojave, Big Sur), Debian Stretch, and Ubuntu 20.04 LTS using recent 
+versions of zsh.  I don't see why it wouldn't work on most anything Unix-like.
 Cygwin?  All bets are off, you monster.
 
 ## Components
@@ -26,7 +26,7 @@ For now:
 - tmux (.tmux.conf, .tmux.conf.local
 - bootstrap.sh (installs required files, makes backups in `$HOME/.dotfiles.bak.$date`)
 
-The `bootstrap.sh` script will check out oh-my-zsh and powerlevel10k if needed.
+The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
 
 ## Installation
 Should be easy:
