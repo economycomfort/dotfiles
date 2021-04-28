@@ -1,4 +1,4 @@
-# dotfiles
+# zerobaud/dotfiles
 Various dotfiles for personal use.
 
 ## Description
@@ -10,12 +10,12 @@ leverages others' work, plus customizations added by myself.
 - Oh My Tmux by [Gregory Pakosz](https://github.com/gpakosz/.tmux)
 - Various bits and pieces by [myself](https://github.com/zerobaud)
 
-Dotfiles here can be installed on most any unix-like system utilizing the 
-included bootstrap.sh script.  Run `bootstrap.sh -h` for usage.  Existing 
-files will be backed up into `~/.dotfiles.bak.$date`.
+Dotfiles here can be installed on most any Unix-like environment utilizing the included 
+`bootstrap.sh` script.  Run `bootstrap.sh -h` for usage; there is some optional 
+functionality.  Existing files will be backed up into `~/.dotfiles.bak.$date`.
 
-Tested on MacOS Mojave and Debian Stretch using recent versions of zsh.
-Not tested on BSD, but should work just fine.
+Tested on MacOS (Mojave, Big Sur), Debian Stretch, and Ubuntu 20.04 LTS using recent 
+versions of zsh.  I don't see why it wouldn't work on most anything.
 Cygwin?  All bets are off, you monster.
 
 ## Components
@@ -26,7 +26,7 @@ For now:
 - tmux (.tmux.conf, .tmux.conf.local
 - bootstrap.sh (installs required files, makes backups in `$HOME/.dotfiles.bak.$date`)
 
-The `bootstrap.sh` script will check out oh-my-zsh and powerlevel10k if needed.
+The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
 
 ## Installation
 Should be easy:
