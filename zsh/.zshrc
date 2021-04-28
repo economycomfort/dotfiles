@@ -19,6 +19,13 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+
+# Figure out if tmux is installed before loading the plugin
+if ( which tmux >>/dev/null ); then
+  tmux="tmux"
+else
+  tmux=""
+fi
 plugins=(sudo ssh-agent tmux git docker-compose command-not-found zsh-syntax-highlighting)
 
 # ssh-agent plugin options
