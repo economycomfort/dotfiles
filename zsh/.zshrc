@@ -26,7 +26,7 @@ if ( which tmux >>/dev/null ); then
 else
   tmux=""
 fi
-plugins=(sudo ssh-agent tmux git docker-compose command-not-found zsh-syntax-highlighting)
+plugins=(sudo ssh-agent $tmux git docker-compose command-not-found zsh-syntax-highlighting)
 
 # ssh-agent plugin options
 sshkeys=(`file ${HOME}/.ssh/* | egrep "private key" | sed 's/:.*//'`)
