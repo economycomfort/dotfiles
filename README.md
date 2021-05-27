@@ -6,8 +6,8 @@ Collection of personal dotfiles for use on my own systems.  Mostly
 leverages others' work, plus customizations added by myself. 
 
 - [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
-- Powerlevel10k zsh theme by [Roman Perepelitsa](https://github.com/romkatv/powerlevel10k)
-- Oh My Tmux by [Gregory Pakosz](https://github.com/gpakosz/.tmux)
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k) zsh theme by Roman Perepelitsa
+- [Oh My Tmux](https://github.com/gpakosz/.tmux) by Gregory Pakosz
 - Various bits and pieces by [myself](https://github.com/zerobaud)
 
 Dotfiles here can be installed on most any Unix-like environment utilizing the included 
