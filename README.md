@@ -1,5 +1,5 @@
-# zerobaud/dotfiles
-Various dotfiles for personal use.
+# dotfiles
+Various configuration files for personal use.
 
 ## Description
 Collection of personal dotfiles for use on my own systems.  Mostly 
