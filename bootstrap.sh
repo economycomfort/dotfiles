@@ -34,7 +34,7 @@ preflight () {
   # Check to make sure we have the right tools installed.
   prereqs=(zsh curl git)
   for i in $prereqs; do
-    which $i >/dev/null || {
+    test -x $i || {
       echo -e "${textred}$i needs to be installed to continue.${textnorm}";
       exit 1;
     }
