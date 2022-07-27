@@ -4,11 +4,11 @@
 #
 # Checks to ensure git, curl, and zsh are installed.
 # Installs oh-my-zsh into $HOME.
-# Symlinks dotfiles within the same directory as this script into $HOME.
+# Symlinks (optionally copies) dotfiles within the same directory as this script into $HOME.
 # Creates backups of any originals in $HOME/.dotfiles.bak.$datestamp.
 #
 # David Brooks <dabrooks@outlook.com>
-# https://github.com/zerobaud/dotfiles
+# https://github.com/economycomfort/dotfiles
 #
 set -e
 
@@ -47,12 +47,10 @@ preflight () {
   if [[ $bootstrap_path == "." ]]; then
     bootstrap_path=$PWD
   fi
-
 }
 
 ### Setup the environment.
 setup () {
-    
   # Make a directory to store backups of original files.
   datestamp=`date +%Y%m%d-%H%M`
   backupdir="${HOME}/.dotfiles.bak.$datestamp"
@@ -81,12 +79,10 @@ setup () {
     echo -e "${textgreen}+${textnorm} Cloning zsh-syntax-highlighting plugin:"
     git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   fi
-
 }
 
 ### Link (or copy) the files.
 placefiles () {
-
   # $EXCLUDE is an array, and must be converted into a string prior to modifying
   # the field delimiter.  Trust me, don't try and `echo $EXCLUDE[@] | sed`, it
   # won't work.
@@ -96,10 +92,10 @@ placefiles () {
   # See -c command line argument
   if [[ $copyfiles == yes ]]; then
     cmd="cp -rp"
-    verb="copy"
+    verb="Copying"
   else
     cmd="ln -sf"
-    verb="symlink"
+    verb="Symlinking"
   fi
 
   # Get the whole list of files to copy
@@ -107,26 +103,20 @@ placefiles () {
 
   # Do it
   for file in $filelist; do
-    #echo "DEBUG: $file"
     if [[ -f "${HOME}/`basename ${file}`" ]]; then
-      #echo "DEBUG: Found ${HOME}/`basename ${file}`"
       mv "${HOME}/`basename ${file}`" $backupdir
     fi
-    #echo "DEBUG: ${verb}ing ${file} into ${HOME}/`basename ${file}`"
     $cmd "${file}" "${HOME}/`basename ${file}`" || fail=1
 
     if [[ $fail == 1 ]]; then
       echo "${textred}!${textnorm} Unable to $verb $HOME/`basename $file`.  Permissions?"
     fi
   done
-  echo -e "${textgreen}+${textnorm} ${verb}ing done.  Originals backed up in $backupdir."
-
-
+  echo -e "${textgreen}+${textnorm} ${verb} done.  Originals backed up in $backupdir."
 }
 
 ### Run any OS-specific operations after environment has been set up.
 postflight () {
-
   case `uname` in
     Darwin)
       echo -e "${textwhite}-${textnorm} No MacOS-specific postflight actions to take."
@@ -138,15 +128,10 @@ postflight () {
       echo -e "${textwhite}-${textnorm} No BSD-specific postflight actions to take."
       ;;
   esac
-
-  # Change user's default shell to zsh.
-  #chsh -s `which zsh` || echo "! Unable to set default shell to zsh."
-
 }
 
 ### Print usage instructions.
 usage () {
-
   echo "Usage: $0 (-chsy)"
   echo
   echo "  -c:  Copies dotfiles instead of symlinking them (default: symlink)"
@@ -154,7 +139,6 @@ usage () {
   echo "  -y:  Do not run interactively; jump right in (default: interactive)"
   echo "  -h:  Prints this help message"
   echo
-
 }
 
 
