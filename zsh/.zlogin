@@ -24,8 +24,9 @@
 
   # Print a random fortune.
   if (( $+commands[fortune] )); then
+    echo
     fortune -s
-    print
+    echo
   fi
 
 } >&2
