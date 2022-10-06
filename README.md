@@ -8,7 +8,7 @@ leverages others' work, plus customizations added by myself.
 - [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k) zsh theme by Roman Perepelitsa
 - [Oh My Tmux](https://github.com/gpakosz/.tmux) by Gregory Pakosz
-- Various bits and pieces by [myself](https://github.com/zerobaud)
+- Various bits and pieces by [myself](https://github.com/economycomfort)
 
 Dotfiles here can be installed on most any Unix-like environment utilizing the included 
 `bootstrap.sh` script.  Run `bootstrap.sh -h` for usage; there is some optional 
@@ -34,7 +34,7 @@ Should be easy:
 1. Ensure you have `zsh`, `curl`, and `git` installed.
 2. Clone this repository.  Make sure you check it out recursively!
 
-	`git clone --recursive https://github.com/zerobaud/dotfiles.git`
+	`git clone --recursive https://github.com/economycomfort/dotfiles.git`
  
 3. Run `bootstrap.sh`.
 
