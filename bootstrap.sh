@@ -7,7 +7,7 @@
 # Symlinks (optionally copies) dotfiles within the same directory as this script into $HOME.
 # Creates backups of any originals in $HOME/.dotfiles.bak.$datestamp.
 #
-# David Brooks <dabrooks@outlook.com>
+# economycomfort @ github
 # https://github.com/economycomfort/dotfiles
 #
 set -e
@@ -35,7 +35,6 @@ URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/too
 URL_P10K="https://github.com/romkatv/powerlevel10k.git"
 URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
-
 # Filename patterns to exclude from symlinking.
 EXCLUDE=(
   "bootstrap.*"
@@ -45,6 +44,7 @@ EXCLUDE=(
   "\.md"
   "\.DS_Store"
 )
+
 
 ###
 ### Perform preflight checks.
