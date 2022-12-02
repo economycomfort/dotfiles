@@ -204,7 +204,7 @@ textnorm="\033[0m"
 
 # Define a user help message to display by default
 #echo "DEBUG"
-info=$(cat <<-'EOF'
+info=$(cat <<-EOF
   ${textgreen}This script will:${textnorm}
       
     - Install the oh-my-zsh framework into ${HOME}/.oh-my-zsh;
