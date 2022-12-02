@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 #
 # Copies various dotfiles into place.
 #
-# Checks to ensure git, curl, and zsh are installed.
+# Checks to ensure git and curl are installed.
 # Installs oh-my-zsh into $HOME.
 # Symlinks (optionally copies) dotfiles within the same directory as this script into $HOME.
 # Creates backups of any originals in $HOME/.dotfiles.bak.$datestamp.
@@ -11,24 +11,6 @@
 # https://github.com/economycomfort/dotfiles
 #
 set -e
-
-# Before we do anything, check the verison of bash.
-# This is mostly because Apple still ships MacOS with a prehistoric version of bash
-# installed by default (circa 2005).  This probably won't happen on Linux or BSD.
-bashver=`echo $BASH_VERSION | sed -E 's/^([0-9]+).*/\1/'`
-if [[ $bashver -lt 5 ]]; then
-  echo "Your version of bash, ${BASH_VERSION}, is quite old."
-  if [[ $(uname) == Darwin ]]; then
-    echo
-    echo "MacOS in particular ships an extremely old version of bash by default."  
-    echo "Consider installing Homebrew (https://brew.sh) and updating with:"
-    echo
-    echo "  $ brew install bash"
-  else
-    echo "Please update to bash version 5.x+ before running this script."
-  fi
-  exit 1
-fi
 
 # A few variables to define where to grab content.
 URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
