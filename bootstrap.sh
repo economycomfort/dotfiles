@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 #
 # Copies various dotfiles into place.
 #
@@ -11,6 +11,24 @@
 # https://github.com/economycomfort/dotfiles
 #
 set -e
+
+# Before we do anything, check the verison of bash.
+# This is mostly because Apple still ships MacOS with a prehistoric version of bash
+# installed by default (circa 2005).  This probably won't happen on Linux or BSD.
+bashver=`echo $BASH_VERSION | sed -E 's/^([0-9]+).*/\1/'`
+if [[ $bashver -lt 5 ]]; then
+  echo "Your version of bash, ${BASH_VERSION}, is quite old."
+  if [[ $(uname) == Darwin ]]; then
+    echo
+    echo "MacOS in particular ships an extremely old version of bash by default."  
+    echo "Consider installing Homebrew (https://brew.sh) and updating with:"
+    echo
+    echo "  $ brew install bash"
+  else
+    echo "Please update to bash version 5.x+ before running this script."
+  fi
+  exit 1
+fi
 
 # A few variables to define where to grab content.
 URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
@@ -25,10 +43,12 @@ EXCLUDE=(
   "\.swp"
   "\.git*"
   "\.md"
+  "\.DS_Store"
 )
 
-
+###
 ### Perform preflight checks.
+###
 preflight () {
 
   # Check to make sure we have the right tools installed.
@@ -43,16 +63,18 @@ preflight () {
   # We need to understand what path this script is in.
   # If not, there's a risk we destroy a home directory with useless symlinks.
   # If we're in the same directory as this script, we'll use $PWD.
-  bootstrap_path=`dirname $0`
+  bootstrap_path=$(dirname $0)
   if [[ $bootstrap_path == "." ]]; then
     bootstrap_path=$PWD
   fi
 }
 
+###
 ### Setup the environment.
+###
 setup () {
   # Make a directory to store backups of original files.
-  datestamp=`date +%Y%m%d-%H%M`
+  datestamp=$(date +%Y%m%d-%H%M)
   backupdir="${HOME}/.dotfiles.bak.$datestamp"
   echo -e "${textgreen}+${textnorm} Creating backup directory: $backupdir"
   mkdir -p $backupdir
@@ -81,7 +103,9 @@ setup () {
   fi
 }
 
+###
 ### Link (or copy) the files.
+###
 placefiles () {
   # $EXCLUDE is an array, and must be converted into a string prior to modifying
   # the field delimiter.  Trust me, don't try and `echo $EXCLUDE[@] | sed`, it
@@ -103,21 +127,23 @@ placefiles () {
 
   # Do it
   for file in $filelist; do
-    if [[ -f "${HOME}/`basename ${file}`" ]]; then
-      mv "${HOME}/`basename ${file}`" $backupdir
+    if [[ -f "${HOME}/$(basename ${file})" ]]; then
+      mv "${HOME}/$(basename ${file})" $backupdir
     fi
-    $cmd "${file}" "${HOME}/`basename ${file}`" || fail=1
+    $cmd "${file}" "${HOME}/$(basename ${file})" || fail=1
 
     if [[ $fail == 1 ]]; then
-      echo "${textred}!${textnorm} Unable to $verb $HOME/`basename $file`.  Permissions?"
+      echo "${textred}!${textnorm} Unable to $verb $HOME/$(basename $file).  Permissions?"
     fi
   done
   echo -e "${textgreen}+${textnorm} ${verb} done.  Originals backed up in $backupdir."
 }
 
+###
 ### Run any OS-specific operations after environment has been set up.
+###
 postflight () {
-  case `uname` in
+  case $(uname) in
     Darwin)
       echo -e "${textwhite}-${textnorm} No MacOS-specific postflight actions to take."
       ;;
@@ -130,7 +156,9 @@ postflight () {
   esac
 }
 
+###
 ### Print usage instructions.
+###
 usage () {
   echo "Usage: $0 (-chsy)"
   echo
@@ -141,9 +169,9 @@ usage () {
   echo
 }
 
-
+###
 ### Here we go!
-
+###
 # Validate command line options
 while getopts ":chsy" options; do
   case $options in
@@ -175,27 +203,27 @@ textwhite="\033[1;37m"
 textnorm="\033[0m"
 
 # Define a user help message to display by default
-info=$(cat << EOM
+#echo "DEBUG"
+info=$(cat <<-'EOF'
+  ${textgreen}This script will:${textnorm}
+      
+    - Install the oh-my-zsh framework into ${HOME}/.oh-my-zsh;
+    - Install the powerlevel10k zsh theme into ${HOME}/.oh-my-zsh/custom/themes;
+    - Install extra zsh modules into ${HOME}/.oh-my-zsh/custom/plugins;
+    - Symlink (or copy, depending on usage) several dotfiles into ${HOME};
+    - Attempt to back up any existing files into ${HOME}/.dotfiles.bak.XXXXXXXX.
 
-${textgreen}This script will:${textnorm}
+  ${textgreen}Note:${textnorm}
 
-  - Install the oh-my-zsh framework into ${HOME}/.oh-my-zsh;
-  - Install the powerlevel10k zsh theme into ${HOME}/.oh-my-zsh/custom/themes;
-  - Install extra zsh modules into ${HOME}/.oh-my-zsh/custom/plugins;
-  - Symlink (or copy, depending on usage) several dotfiles into ${HOME};
-  - Attempt to back up any existing files into ${HOME}/.dotfiles.bak.XXXXXXXX.
+  The prompt theme for zsh may require a nerdfont-patched font for certain 
+  characters to display appropriately.  Please ensure the terminal you're using 
+  is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)  
 
-${textgreen}Note:${textnorm}
+  ${textwhite}For more information on patched fonts:${textnorm}
 
-The prompt theme for zsh may require a nerdfont-patched font for certain 
-characters to display appropriately.  Please ensure the terminal you're using 
-is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)  
-
-${textwhite}For more information on patched fonts:${textnorm}
-
-https://www.nerdfonts.com
- 
-EOM
+  https://www.nerdfonts.com
+  
+EOF
 )
 
 # Read user input (if run non-interactively, will skip - see "-y" option)
@@ -217,8 +245,8 @@ case $resp in
     postflight
 
     if [[ $chsh == yes ]]; then
-      echo -e "${textwhite}-${textnorm} Changing user shell to `which zsh`, password prompt to follow:"
-      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to zsh."
+      echo -e "${textwhite}-${textnorm} Changing user shell to $(which zsh), password prompt to follow:"
+      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to $(which zsh)."
     else
       echo
       echo "Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
@@ -226,7 +254,7 @@ case $resp in
     echo -e "${textwhite}Done!${textnorm}"
     ;;
   *)
-    echo "${textred}Cancelled by user.${textnorm}"
+    echo "${textred}Cancelled by user. ${textnorm} "
     exit 1
     ;;
 esac
