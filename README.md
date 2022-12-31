@@ -14,9 +14,8 @@ Dotfiles here can be installed on most any Unix-like environment utilizing the i
 `bootstrap.sh` script.  Run `bootstrap.sh -h` for usage; there is some optional 
 functionality.  Existing files will be backed up into `~/.dotfiles.bak.$date`.
 
-Tested on MacOS (Mojave, Big Sur), Debian Stretch, and Ubuntu 20.04 LTS using recent 
-versions of zsh.  I don't see why it wouldn't work on most anything.
-Cygwin?  All bets are off, you monster.
+Tested on recent versions of MacOS, Debian, and Ubuntu using recent versions of zsh.  I don't 
+see why it wouldn't work on most anything, really.  Cygwin?  All bets are off, you monster.
 
 ## Components
 For now:
