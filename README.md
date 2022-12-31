@@ -24,7 +24,7 @@ For now:
 - zsh: `.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `.zlogout`
 - vim: `.vimrc`
 - tmux: `.tmux.conf`, `.tmux.conf.local`
-- bootstrap.sh: `installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
+- bootstrap.sh: installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
 
 The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
 
