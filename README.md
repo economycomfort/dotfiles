@@ -3,7 +3,7 @@ Various configuration files for personal use.
 
 ## Description
 Collection of personal dotfiles for use on my own systems.  Mostly 
-leverages others' work, plus customizations added by myself. 
+leverages others' work. 
 
 - [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh)
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k) zsh theme by Roman Perepelitsa
@@ -21,10 +21,10 @@ Cygwin?  All bets are off, you monster.
 ## Components
 For now:
 
-- zsh (.zshrc, .zshenv, .zprofile, .zlogin, .zlogout)
-- vim (.vimrc)
-- tmux (.tmux.conf, .tmux.conf.local
-- bootstrap.sh (installs required files, makes backups in `$HOME/.dotfiles.bak.$date`)
+- zsh: `.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `.zlogout`
+- vim: `.vimrc`
+- tmux: `.tmux.conf`, `.tmux.conf.local`
+- bootstrap.sh: `installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
 
 The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
 
