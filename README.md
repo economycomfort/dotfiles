@@ -31,7 +31,7 @@ The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
 Should be easy:
 
 1. Ensure you have `zsh`, `curl`, and `git` installed.
-2. Clone this repository.  Make sure you check it out recursively!
+2. Clone this repository:
 
 	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
