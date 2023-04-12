@@ -33,7 +33,7 @@ Should be easy:
 1. Ensure you have `zsh`, `curl`, and `git` installed.
 2. Clone this repository.  Make sure you check it out recursively!
 
-	`git clone --recursive https://github.com/economycomfort/dotfiles.git`
+	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
 3. Run `bootstrap.sh`.
 
