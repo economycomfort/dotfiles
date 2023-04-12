@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 #
 # Copies various dotfiles into place.
 #
@@ -15,18 +15,20 @@ set -e
 # A few variables to define where to grab content.
 URL_OHMYZSH="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
 URL_P10K="https://github.com/romkatv/powerlevel10k.git"
-URL_ZSH_SYNTAX_HIGHLIGHTING="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+URL_TMUX="https://github.com/gpakosz/.tmux.git"
+URL_ZSH_SYNTAX="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
-# Filename patterns to exclude from symlinking.
-EXCLUDE=(
-  "bootstrap.*"
-  "\.exclude*"
-  "\.swp"
-  "\.git*"
-  "\.md"
-  "\.DS_Store"
+# dotfiles to symlink
+DOTFILES=(
+  ".p10k.zsh"
+  ".vimrc"
+  ".zlogin"
+  ".zlogout"
+  ".zshenv"
+  ".zshrc"
+  "tmux/.tmux.conf"
+  "tmux/.tmux.conf.local"
 )
-
 
 ###
 ### Perform preflight checks.
@@ -34,9 +36,9 @@ EXCLUDE=(
 preflight () {
 
   # Check to make sure we have the right tools installed.
-  prereqs=(zsh curl git)
+  prereqs="zsh curl git"
   for i in $prereqs; do
-    test -x $i || {
+    test -x $(which $i) || {
       echo -e "${textred}$i needs to be installed to continue.${textnorm}";
       exit 1;
     }
@@ -58,6 +60,7 @@ setup () {
   # Make a directory to store backups of original files.
   datestamp=$(date +%Y%m%d-%H%M)
   backupdir="${HOME}/.dotfiles.bak.$datestamp"
+  
   echo -e "${textgreen}+${textnorm} Creating backup directory: $backupdir"
   mkdir -p $backupdir
 
@@ -65,36 +68,39 @@ setup () {
   if [[ -d "${HOME}/.oh-my-zsh" ]]; then
     echo -e "${textwhite}-${textnorm} oh-my-zsh appears to already be installed; skipping."
   else
-    ZSH= sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended"
+    sh -c "$(curl -fsSL $URL_OHMYZSH) --unattended" &>/dev/null
   fi  
   
   # Install powerlevel10k theme
   if [[ -d "${HOME}/.oh-my-zsh/custom/themes/powerlevel10k" ]]; then
     echo -e "${textwhite}-${textnorm} powerlevel10k appears to already be installed; skipping."
   else
-    echo -e "${textgreen}+${textnorm} Cloning powerlevel10k theme:"
-    git clone $URL_P10K ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
+    echo -e "${textgreen}+${textnorm} Installing powerlevel10k theme"
+    git clone --quiet $URL_P10K ${HOME}/.oh-my-zsh/custom/themes/powerlevel10k
   fi
 
   # Install zsh-syntax-highlighting plugin
   if [[ -d "${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]]; then
     echo -e "${textwhite}-${textnorm} zsh-syntax-highlighting plugin appears to already be installed; skipping."
   else
-    echo -e "${textgreen}+${textnorm} Cloning zsh-syntax-highlighting plugin:"
-    git clone $URL_ZSH_SYNTAX_HIGHLIGHTING ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    echo -e "${textgreen}+${textnorm} zsh-syntax-highlighting plugin"
+    git clone --quiet $URL_ZSH_SYNTAX ${HOME}/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
   fi
+
+  # Install tmux files
+  if [[ -d "tmux" ]]; then
+    echo -e "${textwhite}-${textnorm} tmux config files already installed; skipping."
+  else
+    echo -e "${textgreen}+${textnorm} Installing tmux config files"
+    git clone --quiet $URL_TMUX tmux
+  fi
+
 }
 
 ###
 ### Link (or copy) the files.
 ###
 placefiles () {
-  # $EXCLUDE is an array, and must be converted into a string prior to modifying
-  # the field delimiter.  Trust me, don't try and `echo $EXCLUDE[@] | sed`, it
-  # won't work.
-  exclude_str=${EXCLUDE[@]}
-  exclude_str=${exclude_str// /|}
-
   # See -c command line argument
   if [[ $copyfiles == yes ]]; then
     cmd="cp -rp"
@@ -104,18 +110,15 @@ placefiles () {
     verb="Symlinking"
   fi
 
-  # Get the whole list of files to copy
-  filelist=$( du -a $bootstrap_path | sed -e 's/^[0-9]*\t//' | egrep '\/\.[A-Z,a-z,0-9]' | egrep -v $exclude_str )
-
   # Do it
-  for file in $filelist; do
+  for file in ${DOTFILES[@]}; do
     if [[ -f "${HOME}/$(basename ${file})" ]]; then
       mv "${HOME}/$(basename ${file})" $backupdir
     fi
-    $cmd "${file}" "${HOME}/$(basename ${file})" || fail=1
+    $cmd "${PWD}/${file}" "${HOME}/$(basename ${file})" || fail=1
 
     if [[ $fail == 1 ]]; then
-      echo "${textred}!${textnorm} Unable to $verb $HOME/$(basename $file).  Permissions?"
+      echo "${textred}!${textnorm} Unable to $verb ${HOME}/$(basename $file).  Permissions?"
     fi
   done
   echo -e "${textgreen}+${textnorm} ${verb} done.  Originals backed up in $backupdir."
@@ -144,10 +147,10 @@ postflight () {
 usage () {
   echo "Usage: $0 (-chsy)"
   echo
-  echo "  -c:  Copies dotfiles instead of symlinking them (default: symlink)"
-  echo "  -s:  Sets default shell to zsh (default: no, will prompt for user password)"
-  echo "  -y:  Do not run interactively; jump right in (default: interactive)"
-  echo "  -h:  Prints this help message"
+  echo "  -c: Copies dotfiles instead of symlinking them (default: symlink)"
+  echo "  -s: Sets default shell to zsh (default: no, will prompt for user password)"
+  echo "  -y: Do not run interactively; jump right in (default: interactive)"
+  echo "  -h: Prints this help message"
   echo
 }
 
@@ -155,7 +158,7 @@ usage () {
 ### Here we go!
 ###
 # Validate command line options
-while getopts ":chsy" options; do
+while getopts ":chqsy" options; do
   case $options in
     c)
       copyfiles="yes"
@@ -185,7 +188,6 @@ textwhite="\033[1;37m"
 textnorm="\033[0m"
 
 # Define a user help message to display by default
-#echo "DEBUG"
 info=$(cat <<-EOF
 
   ${textgreen}This script will:${textnorm}
@@ -229,10 +231,10 @@ case $resp in
 
     if [[ $chsh == yes ]]; then
       echo -e "${textwhite}-${textnorm} Changing user shell to $(which zsh), password prompt to follow:"
-      chsh -s `which zsh` || echo -e "${textred}!${textnorm} Unable to set shell to $(which zsh)."
+      chsh -s $(which zsh) || echo -e "${textred}!${textnorm} Unable to set shell to $(which zsh)."
     else
       echo
-      echo "Don't forget to set your default shell to zsh (try: chsh -s \`which zsh\`)"
+      echo "Don't forget to set your default shell to zsh, try: chsh -s \$(which zsh)"
     fi
     echo -e "${textwhite}Done!${textnorm}"
     ;;
