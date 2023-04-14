@@ -11,7 +11,7 @@ leverages others' work.
 - Various bits and pieces by [myself](https://github.com/economycomfort)
 
 Dotfiles here can be installed on most any Unix-like environment utilizing the included 
-`bootstrap` script.  Run `bootstrap -h` for usage; there is some optional 
+`install` script.  Run `install -h` for usage; there is some optional 
 functionality.  Existing files will be backed up into `~/.dotfiles.bak.$date`.
 
 Tested on recent versions of MacOS, Debian, and Ubuntu using recent versions of zsh.  I don't 
@@ -23,9 +23,9 @@ For now:
 - zsh: `.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `.zlogout`
 - vim: `.vimrc`
 - tmux: `.tmux.conf`, `.tmux.conf.local`
-- bootstrap.sh: installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
+- install: installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
 
-The `bootstrap.sh` script will clone Oh My Zsh and Powerlevel10k if needed.
+The `install` script will clone Oh My Zsh and Powerlevel10k if needed.
 
 ## Installation
 Should be easy:
@@ -35,7 +35,7 @@ Should be easy:
 
 	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
-3. Run `bootstrap`.
+3. Run `install`.
 
 4. Enjoy!
 
