@@ -1,0 +1,163 @@
+#!/bin/zsh
+#
+# Copies various dotfiles into place.
+#
+# This script will:
+#    
+#  - Install the oh-my-zsh framework into ~/.oh-my-zsh
+#  - Install the powerlevel10k zsh theme into $ZSH_CUSTOM/themes
+#  - Install extra zsh modules into $ZSH_CUSTOM/plugins
+#  - Symlink (or copy, depending on usage) several dotfiles into $HOME
+#  - Attempt to back up any existing files into ~/.dotfiles.bak.XXXXXXXX
+#
+# Note:
+# The prompt theme for zsh may require a nerdfont-patched font for certain 
+# characters to display appropriately.  Please ensure the terminal you're using 
+# is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)
+#
+# For more information on patched fonts: https://www.nerdfonts.com
+#
+# economycomfort @ github
+# https://github.com/economycomfort/dotfiles
+#
+set -e
+
+# A few variables to define where to grab content.
+URL_OMZ="https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh"
+URL_P10K="https://github.com/romkatv/powerlevel10k.git"
+URL_TMUX="https://github.com/gpakosz/.tmux.git"
+URL_ZSHSH="https://github.com/zsh-users/zsh-syntax-highlighting.git"
+
+readonly URL_ZSH URL_P10K URL_TMUX URL_ZSHSH
+
+# dotfiles to symlink (or copy)
+readonly DOTFILES=(
+  ".p10k.zsh"
+  ".vimrc"
+  ".zlogin"
+  ".zlogout"
+  ".zshenv"
+  ".zshrc"
+  "tmux/.tmux.conf"
+  "tmux/.tmux.conf.local"
+)
+
+readonly SCRIPTNAME=$0
+
+err() {
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
+}
+
+usage () {
+  echo "Usage: $1 (-chsy)"
+  echo
+  echo "  -c: Copy dotfiles instead of symlinking them (default: symlink)"
+  echo "  -s: Sets default shell to zsh (default: no, will prompt for user password)"
+  echo "  -h: Prints this help message"
+  echo
+}
+  
+omz="${HOME}/.oh-my-zsh"
+
+# Validate command line options
+while getopts ":chs" args; do
+  case $args in
+    c) local copyfiles=1 ;;
+    h)
+      usage $0
+      exit 0
+      ;;
+    s) local chsh=1 ;;
+    *)
+      err "Unrecognized argument: ${OPTARG}"
+      usage $0
+      exit 1
+      ;;
+  esac
+done
+
+# Check to make sure we have the right tools installed.
+prereqs=(zsh curl git)
+for i in $prereqs; do
+  if [[ ! -x $(which $i) ]]; then
+    err "$i is not installed."
+    exit 1
+  fi
+done
+
+# Take note of script path
+script_path=$(dirname $0)
+if [[ $script_path == "." ]]; then
+  script_path=$PWD
+fi
+
+# Make a directory to store backups of original files.
+datestamp=$(date +%Y%m%d-%H%M)
+backupdir="${HOME}/.dotfiles.bak.$datestamp"
+
+echo "+ Creating backup directory: $backupdir"
+mkdir -p $backupdir
+
+# Install oh-my-zsh framework
+if [[ ! -f "${omz}/oh-my-zsh.sh" ]] then  # don't overwrite
+  echo "+ Installing oh-my-zsh"
+  sh -c "$(curl -fsSL $URL_OMZ) --unattended" &>/dev/null
+fi
+
+# Install powerlevel10k theme
+if [[ ! -d "${omz}/custom/themes/powerlevel10k" ]]; then
+  echo "+ Cloning powerlevel10k from $URL_P10K"
+  git clone --quiet $URL_P10K ${omz}/custom//themes/powerlevel10k
+fi
+
+# Install zsh-syntax-highlighting plugin
+if [[ ! -d "${omz}/custom/plugins/zsh-syntax-highlighting" ]]; then
+  echo "+ Cloning zsh-syntax-highlighting from $URL_ZSHSH"
+  git clone --quiet $URL_ZSHSH ${omz}/custom/plugins/zsh-syntax-highlighting
+fi
+
+# Install tmux files
+if [[ -d "${script_path}/tmux" ]]; then rm -rf ${script_path}/tmux; fi
+echo "+ Cloning tmux config files from $URL_TMUX"
+git clone --quiet $URL_TMUX tmux
+
+# See -c command line argument
+if [[ $copyfiles ]]; then
+  cmd="cp -rp"
+  verb="copy"
+else
+  cmd="ln -sf"
+  verb="symlink"
+fi
+
+# Do it
+for file in ${DOTFILES[@]}; do
+  if [[ -f "${HOME}/$(basename $file)" ]]; then
+    mv "${HOME}/$(basename $file)" $backupdir
+  fi
+  if ! ${=cmd} "${PWD}/${file}" "${HOME}/$(basename $file)"; then
+    err "Unable to $verb ${HOME}/$(basename $file).  Permissions?"
+    exit 1
+  fi
+done
+echo "+ ${(C)verb}ing done.  Originals backed up in $backupdir."
+
+# Run any OS-specific post-flight actions.
+case $(uname) in
+  Darwin)
+    # do_stuff
+    ;;
+  Linux)
+    ;;
+  *BSD)
+    ;;
+esac
+
+if [[ $chsh ]]; then
+  if ! chsh -s $(which zsh); then 
+    err "Unable to set shell to $(which zsh)."
+  fi
+else
+  echo "\nDon't forget to set your default shell to zsh, try: chsh -s \$(which zsh)"
+fi
+echo "Done!"

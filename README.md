@@ -11,7 +11,7 @@ leverages others' work.
 - Various bits and pieces by [myself](https://github.com/economycomfort)
 
 Dotfiles here can be installed on most any Unix-like environment utilizing the included 
-`bootstrap.sh` script.  Run `bootstrap.sh -h` for usage; there is some optional 
+`bootstrap` script.  Run `bootstrap -h` for usage; there is some optional 
 functionality.  Existing files will be backed up into `~/.dotfiles.bak.$date`.
 
 Tested on recent versions of MacOS, Debian, and Ubuntu using recent versions of zsh.  I don't 
@@ -35,7 +35,7 @@ Should be easy:
 
 	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
-3. Run `bootstrap.sh`.
+3. Run `bootstrap`.
 
 4. Enjoy!
 
