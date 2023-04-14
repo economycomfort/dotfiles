@@ -1,14 +1,12 @@
 #!/bin/zsh
 #
 # Copies various dotfiles into place.
-#
-# This script will:
 #    
-#  - Install the oh-my-zsh framework into ~/.oh-my-zsh
-#  - Install the powerlevel10k zsh theme into $ZSH_CUSTOM/themes
-#  - Install extra zsh modules into $ZSH_CUSTOM/plugins
-#  - Symlink (or copy, depending on usage) several dotfiles into $HOME
-#  - Attempt to back up any existing files into ~/.dotfiles.bak.XXXXXXXX
+#  - Installs the oh-my-zsh framework into ~/.oh-my-zsh
+#  - Installs the powerlevel10k zsh theme into $ZSH_CUSTOM/themes
+#  - Installs extra zsh modules into $ZSH_CUSTOM/plugins
+#  - Symlinks (or copies, depending on usage) several dotfiles into $HOME
+#  - Attempts to back up any existing files into ~/.dotfiles.bak.XXXXXXXX
 #
 # Note:
 # The prompt theme for zsh may require a nerdfont-patched font for certain 
@@ -48,7 +46,7 @@ usage () {
   echo "Usage: $1 (-chsy)"
   echo
   echo "  -c: Copy dotfiles instead of symlinking them (default: symlink)"
-  echo "  -s: Sets default shell to zsh (default: no, will prompt for user password)"
+  echo "  -s: Sets default shell to zsh (default: no, will prompt for password)"
   echo "  -h: Prints this help message"
   echo
 }
