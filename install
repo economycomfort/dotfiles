@@ -28,10 +28,8 @@ URL_P10K="https://github.com/romkatv/powerlevel10k.git"
 URL_TMUX="https://github.com/gpakosz/.tmux.git"
 URL_ZSHSH="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
-readonly URL_ZSH URL_P10K URL_TMUX URL_ZSHSH
-
 # dotfiles to symlink (or copy)
-readonly DOTFILES=(
+DOTFILES=(
   ".p10k.zsh"
   ".vimrc"
   ".zlogin"
@@ -41,8 +39,6 @@ readonly DOTFILES=(
   "tmux/.tmux.conf"
   "tmux/.tmux.conf.local"
 )
-
-readonly SCRIPTNAME=$0
 
 err() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*" >&2
@@ -56,8 +52,6 @@ usage () {
   echo "  -h: Prints this help message"
   echo
 }
-  
-omz="${HOME}/.oh-my-zsh"
 
 # Validate command line options
 while getopts ":chs" args; do
@@ -94,9 +88,10 @@ fi
 # Make a directory to store backups of original files.
 datestamp=$(date +%Y%m%d-%H%M)
 backupdir="${HOME}/.dotfiles.bak.$datestamp"
-
 echo "+ Creating backup directory: $backupdir"
 mkdir -p $backupdir
+
+omz="${HOME}/.oh-my-zsh"
 
 # Install oh-my-zsh framework
 if [[ ! -f "${omz}/oh-my-zsh.sh" ]] then  # don't overwrite
