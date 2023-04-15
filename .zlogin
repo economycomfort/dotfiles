@@ -34,11 +34,14 @@
     # turns out zsh can pad strings on left and right, see below  
     print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
     $commands[toilet] --font wideterm -F gay -F border $hostname
+    echo
+  else
+    echo "Missing login art? Install the `toilet` package."
+    echo
   fi
 
   # Print a random fortune.
   if (( $+commands[fortune] )); then
-    echo
     fortune -s
     echo
   fi
