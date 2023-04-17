@@ -41,7 +41,7 @@
     fi
     
     # turns out zsh can pad strings on left and right, see below  
-    print -r - ${ (l[length/2][ ]r[length-length/2-1][ ])welcome }
+    print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
     $commands[toilet] --font wideterm -F gay -F border $hostname
     echo
   
