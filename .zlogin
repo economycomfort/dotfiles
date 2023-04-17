@@ -45,7 +45,7 @@
     $commands[toilet] --font wideterm -F gay -F border $hostname
     echo
   
-  elif [[ ! $+commands[toilet] ]] && [[ $SSH_TTY ]]; then
+  elif (( ! $+commands[toilet] )) && [[ $SSH_TTY ]]; then
     echo "Missing login art? Install the 'toilet' package."
     echo
   
