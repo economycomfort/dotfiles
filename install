@@ -100,19 +100,19 @@ fi
 # Install powerlevel10k theme
 if [[ ! -d "${omz}/custom/themes/powerlevel10k" ]]; then
   echo "+ Cloning powerlevel10k from $URL_P10K"
-  git clone --quiet $URL_P10K ${omz}/custom//themes/powerlevel10k
+  git clone --quiet --depth=1 $URL_P10K ${omz}/custom//themes/powerlevel10k
 fi
 
 # Install zsh-syntax-highlighting plugin
 if [[ ! -d "${omz}/custom/plugins/zsh-syntax-highlighting" ]]; then
   echo "+ Cloning zsh-syntax-highlighting from $URL_ZSHSH"
-  git clone --quiet $URL_ZSHSH ${omz}/custom/plugins/zsh-syntax-highlighting
+  git clone --quiet --depth=1 $URL_ZSHSH ${omz}/custom/plugins/zsh-syntax-highlighting
 fi
 
 # Install tmux files
 if [[ -d "${repo_path}/tmux" ]]; then rm -rf ${repo_path}/tmux; fi
 echo "+ Cloning tmux config files from $URL_TMUX"
-git clone --quiet $URL_TMUX ${repo_path}/tmux
+git clone --quiet --depth=1 $URL_TMUX ${repo_path}/tmux
 
 # See -c command line argument
 if [[ $copyfiles ]]; then
