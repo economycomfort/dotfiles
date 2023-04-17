@@ -18,21 +18,30 @@
   # Hostname toilet art
   if (( $+commands[toilet] )); then
     echo
-    welcome="Welcome to"
+    msg=(
+      "Welcome to"
+      "You're on"
+      "'Sup dog"
+      "Ay bay bay"
+      "Toot, toot!"
+      "Hootie-hoo"
+      "All aboard"
+    )
     hostname="$(hostname)"
     length=$(( ${#hostname}*2+3 )) # calc width padding for 'wideterm' font
- 
+    welcome=${msg[$(( $RANDOM % ${#msg[@]} + 1 ))]} # choose a random msg
+
     # make things look better if $hostname is on the longer side
     if [[ $length > 22 ]]; then
       welcome=$(
         for (( i=0; i<${#welcome}; i++ )); do
-          echo -n "${welcome:$i:1}"; echo -n " " # 'str' -> 's t r'
+          echo -n "${welcome:$i:1}"; echo -n " " # 'text' -> 't e x t'
         done 
       )
     fi
     
     # turns out zsh can pad strings on left and right, see below  
-    print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
+    print -r - ${ (l[length/2][ ]r[length-length/2-1][ ])welcome }
     $commands[toilet] --font wideterm -F gay -F border $hostname
     echo
   else
