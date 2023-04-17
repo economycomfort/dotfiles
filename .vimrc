@@ -65,7 +65,8 @@ nnoremap <CR> :nohlsearch<CR><CR>
 
 """" Miscellaneous settings that might be worth enabling
 
-"set cursorline         " highlight current line
+set cursorline          " highlight current line
+set cursorcolumn        " highlight current column
 "set background=dark    " configure Vim to use brighter colors
 "set autoread           " autoreload the file in Vim if it has been changed outside of Vim
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE 
