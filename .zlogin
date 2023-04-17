@@ -17,7 +17,7 @@
   echo
   
   # Hostname toilet art (only if SSH)
-  if [[ $+commands[toilet] ]] && [[ $SSH_TTY ]]; then
+  if (( $+commands[toilet] )) && [[ $SSH_TTY ]]; then
     msg=(
       "Welcome to"
       "You're on"
