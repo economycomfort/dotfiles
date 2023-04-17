@@ -14,10 +14,10 @@
 
 # Run only if interactive.
 [[ -o INTERACTIVE && -t 2 ]] && {
+  echo
   
-  # Hostname toilet art
-  if (( $+commands[toilet] )); then
-    echo
+  # Hostname toilet art (only if SSH)
+  if [[ $+commands[toilet] ]] && [[ $SSH_TTY ]]; then
     msg=(
       "Welcome to"
       "You're on"
@@ -44,9 +44,11 @@
     print -r - ${ (l[length/2][ ]r[length-length/2-1][ ])welcome }
     $commands[toilet] --font wideterm -F gay -F border $hostname
     echo
-  else
+  
+  elif [[ ! $+commands[toilet] ]] && [[ $SSH_TTY ]]; then
     echo "Missing login art? Install the 'toilet' package."
     echo
+  
   fi
 
   # Print a random fortune.
