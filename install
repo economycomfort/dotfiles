@@ -9,7 +9,7 @@
 #  - Attempts to back up any existing files into ~/.dotfiles.bak.XXXXXXXX
 #
 # Note:
-# The prompt theme for zsh may require a nerdfont-patched font for certain 
+# The p10k prompt theme for zsh may require a nerdfont-patched font for certain 
 # characters to display appropriately.  Please ensure the terminal you're using 
 # is using a monospaced nerdfont (I prefer SauceCodePro, but many look good.)
 #
@@ -26,7 +26,7 @@ URL_P10K="https://github.com/romkatv/powerlevel10k.git"
 URL_TMUX="https://github.com/gpakosz/.tmux.git"
 URL_ZSHSH="https://github.com/zsh-users/zsh-syntax-highlighting.git"
 
-# dotfiles to symlink (or copy)
+# Common dotfiles to symlink (or copy)
 DOTFILES=(
   ".p10k.zsh"
   ".vimrc"
@@ -97,21 +97,21 @@ if [[ ! -f "${omz}/oh-my-zsh.sh" ]] then  # don't overwrite
   sh -c "$(curl -fsSL $URL_OMZ) --unattended" &>/dev/null
 fi
 
-# Install powerlevel10k theme
+# Clone powerlevel10k theme (shallow-clone)
 if [[ ! -d "${omz}/custom/themes/powerlevel10k" ]]; then
   echo "+ Cloning powerlevel10k from $URL_P10K"
   git clone --quiet --depth=1 $URL_P10K ${omz}/custom//themes/powerlevel10k
 fi
 
-# Install zsh-syntax-highlighting plugin
+# Clone zsh-syntax-highlighting plugin (shallow-clone)
 if [[ ! -d "${omz}/custom/plugins/zsh-syntax-highlighting" ]]; then
   echo "+ Cloning zsh-syntax-highlighting from $URL_ZSHSH"
   git clone --quiet --depth=1 $URL_ZSHSH ${omz}/custom/plugins/zsh-syntax-highlighting
 fi
 
-# Install tmux files
+# Clone oh-my-tmux configs (shallow-clone)
 if [[ -d "${repo_path}/tmux" ]]; then rm -rf ${repo_path}/tmux; fi
-echo "+ Cloning tmux config files from $URL_TMUX"
+echo "+ Cloning oh-my-tmux config files from $URL_TMUX"
 git clone --quiet --depth=1 $URL_TMUX ${repo_path}/tmux
 
 # See -c command line argument
@@ -135,10 +135,10 @@ for file in ${DOTFILES[@]}; do
 done
 echo "+ ${(C)verb}ing done.  Originals backed up in $backupdir."
 
-# Run any OS-specific post-flight actions.
+# Run any OS-specific actions.
 case $(uname) in
-  Darwin)
-    # do_stuff
+  Darwin) # macos
+    # do stuff
     ;;
   Linux)
     ;;
