@@ -32,7 +32,7 @@
     welcome=${msg[$(( $RANDOM % ${#msg[@]} + 1 ))]} # choose a random msg
 
     # make things look better if $hostname is on the longer side
-    if [[ $length > 22 ]]; then
+    if (( $length > 22 )); then
       welcome=$(
         for (( i=0; i<${#welcome}; i++ )); do
           echo -n "${welcome:$i:1}"; echo -n " " # 'text' -> 't e x t'
