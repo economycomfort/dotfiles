@@ -40,8 +40,10 @@
       )
     fi
     
-    # turns out zsh can pad strings on left and right, see below  
-    print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
+    if (( $length >= ${#welcome} )); then # print welcome msg if shorter than length
+      # turns out zsh can pad strings on left and right, see below  
+      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
+    fi
     $commands[toilet] --font wideterm -F gay -F border $hostname
     echo
   
