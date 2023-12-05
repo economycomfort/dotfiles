@@ -50,7 +50,7 @@
       print -r - ${(l[length/2][ ]r[length-length/2-1][ ])t_msg}
     fi
     $commands[toilet] --font wideterm -F border -F gay "$hostname"
-    if (( $length >= ${#t_msg} )); then # print $b_msg if shorter than $length
+    if (( $length >= ${#b_msg} )); then # print $b_msg if shorter than $length
       print -r - ${(l[length/2][ ]r[length-length/2-1][ ])b_msg}
     fi
     echo
