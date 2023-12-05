@@ -22,10 +22,11 @@
       "Welcome to"
       "You're on"
       "'Sup dog"
-      "Ay bay bay"
       "Toot, toot!"
       "Hootie-hoo"
       "All aboard"
+      "ATL HOE"
+      "Choot 'em!"
     )
     hostname="$(hostname)"
     length=$(( ${#hostname}*2+3 )) # calc width padding for 'wideterm' font
@@ -44,7 +45,7 @@
       # turns out zsh can pad strings on left and right, see below  
       print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
     fi
-    $commands[toilet] --font wideterm -F border $hostname | $commands[lolcat]
+    $commands[toilet] --font wideterm -F border "$hostname" | $commands[lolcat]
     echo
   
   elif (( ! $+commands[toilet] )) && [[ $SSH_TTY ]]; then
