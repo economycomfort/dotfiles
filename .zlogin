@@ -18,34 +18,41 @@
   
   # Hostname toilet art (only if SSH)
   if (( $+commands[toilet] )) && [[ $SSH_TTY ]]; then
-    msg=(
+    welcome=(
       "Welcome to"
       "You're on"
+      "All aboard"
+    )
+    tagline=(
       "'Sup dog"
       "Toot, toot!"
       "Hootie-hoo"
-      "All aboard"
       "ATL HOE"
       "Choot 'em!"
+      "ft. Ludacris"
     )
     hostname="$(hostname)"
     length=$(( ${#hostname}*2+3 )) # calc width padding for 'wideterm' font
-    welcome=${msg[$(( $RANDOM % ${#msg[@]} + 1 ))]} # choose a random msg
+    t_msg=${welcome[$(( $RANDOM % ${#welcome[@]} + 1 ))]} # choose a welcome logo
+    b_msg=${tagline[$(( $RANDOM % ${#tagline[@]} + 1 ))]} # choose a tag line
 
-    # make things look better if $hostname is on the longer side
+    # make $t_msg look better if $hostname is on the longer side
     if (( $length > 22 )); then
-      welcome=$(
-        for (( i=0; i<${#welcome}; i++ )); do
-          echo -n "${welcome:$i:1}"; echo -n " " # 'text' -> 't e x t'
+      t_msg=$(
+        for (( i=0; i<${#t_msg}; i++ )); do
+          echo -n "${t_msg:$i:1}"; echo -n " " # 'text' -> 't e x t'
         done 
       )
     fi
     
-    if (( $length >= ${#welcome} )); then # print welcome msg if shorter than length
+    if (( $length >= ${#t_msg} )); then # print $t_msg if shorter than $length
       # turns out zsh can pad strings on left and right, see below  
-      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])welcome}
+      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])t_msg}
     fi
-    $commands[toilet] --font wideterm -F border "$hostname" | $commands[lolcat]
+    $commands[toilet] --font wideterm -F border -F gay "$hostname"
+    if (( $length >= ${#t_msg} )); then # print $b_msg if shorter than $length
+      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])b_msg}
+    fi
     echo
   
   elif (( ! $+commands[toilet] )) && [[ $SSH_TTY ]]; then
