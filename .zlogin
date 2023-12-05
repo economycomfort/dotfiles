@@ -22,8 +22,6 @@
       "Welcome to"
       "You're on"
       "All aboard"
-    )
-    tagline=(
       "'Sup dog"
       "Toot, toot!"
       "Hootie-hoo"
@@ -33,26 +31,22 @@
     )
     hostname="$(hostname)"
     length=$(( ${#hostname}*2+3 )) # calc width padding for 'wideterm' font
-    t_msg=${welcome[$(( $RANDOM % ${#welcome[@]} + 1 ))]} # choose a welcome logo
-    b_msg=${tagline[$(( $RANDOM % ${#tagline[@]} + 1 ))]} # choose a tag line
+    msg=${welcome[$(( $RANDOM % ${#welcome[@]} + 1 ))]} # choose a welcome line
 
-    # make $t_msg look better if $hostname is on the longer side
+    # make $msg look better if $hostname is on the longer side
     if (( $length > 22 )); then
-      t_msg=$(
-        for (( i=0; i<${#t_msg}; i++ )); do
-          echo -n "${t_msg:$i:1}"; echo -n " " # 'text' -> 't e x t'
+      msg=$(
+        for (( i=0; i<${#msg}; i++ )); do
+          echo -n "${msg:$i:1}"; echo -n " " # 'text' -> 't e x t'
         done 
       )
     fi
     
-    if (( $length >= ${#t_msg} )); then # print $t_msg if shorter than $length
+    if (( $length >= ${#msg} )); then # print $msg if shorter than $length
       # turns out zsh can pad strings on left and right, see below  
-      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])t_msg}
+      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])msg}
     fi
-    $commands[toilet] --font wideterm -F border -F gay "$hostname"
-    if (( $length >= ${#b_msg} )); then # print $b_msg if shorter than $length
-      print -r - ${(l[length/2][ ]r[length-length/2-1][ ])b_msg}
-    fi
+    $commands[toilet] --font wideterm -F gay -F border "$hostname"
     echo
   
   elif (( ! $+commands[toilet] )) && [[ $SSH_TTY ]]; then
