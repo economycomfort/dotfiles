@@ -33,7 +33,7 @@ Should be easy:
 1. Ensure you have `zsh`, `curl`, and `git` installed.
 2. Clone this repository:
 
-	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
+	`git clone --recurse-submodules https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
 3. Run `install`.
 
