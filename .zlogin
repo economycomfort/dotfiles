@@ -29,7 +29,7 @@
       "Choot 'em!"
       "ft. Ludacris"
     )
-    hostname="$(hostname)"
+    hostname=$(echo $(hostname) | sed 's/\..*//')
     length=$(( ${#hostname}*2+3 )) # calc width padding for 'wideterm' font
     msg=${welcome[$(( $RANDOM % ${#welcome[@]} + 1 ))]} # choose a welcome line
 
