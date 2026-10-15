@@ -25,7 +25,7 @@ For now:
 - tmux: `.tmux.conf`, `.tmux.conf.local`
 - `install`: installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
 
-The `install` script will clone Oh My Zsh, Powerlevel10k, and zsh-syntax-highlighting if needed.
+The `install` script will clone Oh My Zsh, Powerlevel10k, and zsh-syntax-highlighting if needed, and (re)clones oh-my-tmux into `tmux/`.
 
 ## Installation
 Should be easy:
@@ -33,7 +33,7 @@ Should be easy:
 1. Ensure you have `zsh`, `curl`, and `git` installed.
 2. Clone this repository:
 
-	`git clone --recurse-submodules https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
+	`git clone https://github.com/economycomfort/dotfiles.git ~/.dotfiles`
  
 3. Run `install`.
 
