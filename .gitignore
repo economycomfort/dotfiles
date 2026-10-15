@@ -49,3 +49,6 @@ Temporary Items
 
 # oh-my-tmux, cloned by install; not tracked
 tmux/
+
+# Marker written by the homelab dab-dotfiles Ansible role
+.ansible-install-complete
