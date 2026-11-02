@@ -1,0 +1,15 @@
+# SSH aliases. `install` links this to ~/.ssh/config.
+
+# The agents LXC (Claude Code Remote Control host) has no DNS record, unlike
+# the other homelab hosts, so give it an address here.
+Host agents
+  HostName 10.9.1.203
+  User david
+
+# Attach to the Remote Control session that claude-rc.service keeps running in
+# tmux on the agents LXC. Detach with Ctrl+b d; Ctrl+C would stop the server.
+Host agents-claude
+  HostName 10.9.1.203
+  User claude
+  RequestTTY force
+  RemoteCommand tmux -L rc attach -t rc

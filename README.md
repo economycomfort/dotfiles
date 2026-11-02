@@ -23,6 +23,7 @@ For now:
 - zsh: `.zshrc`, `.zshenv`, `.zprofile`, `.zlogin`, `.zlogout`
 - vim: `.vimrc`
 - tmux: `.tmux.conf`, `.tmux.conf.local`
+- ssh: `ssh/config`, linked to `~/.ssh/config`
 - `install`: installs required files, makes backups in `$HOME/.dotfiles.bak.$date`
 
 The `install` script will clone Oh My Zsh, Powerlevel10k, and zsh-syntax-highlighting if needed, and (re)clones oh-my-tmux into `tmux/`.

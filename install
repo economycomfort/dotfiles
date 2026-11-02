@@ -133,6 +133,18 @@ for file in ${DOTFILES[@]}; do
     exit 1
   fi
 done
+# The ssh config lives in ~/.ssh, so it can't go through the loop above, which
+# keeps only each file's basename. ssh refuses a group/world-writable ~/.ssh.
+mkdir -p "${HOME}/.ssh"
+chmod 700 "${HOME}/.ssh"
+if [[ -f "${HOME}/.ssh/config" ]]; then
+  mv "${HOME}/.ssh/config" $backupdir/ssh-config
+fi
+if ! ${=cmd} "${repo_path}/ssh/config" "${HOME}/.ssh/config"; then
+  err "Unable to $verb ${HOME}/.ssh/config.  Permissions?"
+  exit 1
+fi
+
 echo "+ ${(C)verb}ing done.  Originals backed up in $backupdir."
 
 # Run any OS-specific actions.
